@@ -23,34 +23,31 @@ public class SpriteSheet {
 
     public static void main(String[] args) {
         try {
-            SpriteSheet spriteSheet = new SpriteSheet("/tileset/castle_stones.png");
+            SpriteSheet spriteSheet = new SpriteSheet("/character/idle/originalAssets/Idle_right.png");
 
-            BufferedImage sprite = spriteSheet.getSprite(64, 0, 64, 64);
-            ImageIO.write(sprite, "png", new File("stone_brick.png"));
+            int spriteWidth = 128;
+            int spriteHeight = 64;
 
-//            int spriteWidth = 128;
-//            int spriteHeight = 64;
-//
-//            BufferedImage sprite1 = spriteSheet.getSprite(0, 0, spriteWidth, spriteHeight);
-//            BufferedImage sprite2 = spriteSheet.getSprite(128, 0, spriteWidth, spriteHeight);
-//            BufferedImage sprite3 = spriteSheet.getSprite(0, 64, spriteWidth, spriteHeight);
-//            BufferedImage sprite4 = spriteSheet.getSprite(128, 64, spriteWidth, spriteHeight);
-//            BufferedImage sprite5 = spriteSheet.getSprite(0, 128, spriteWidth, spriteHeight);
-//            BufferedImage sprite6 = spriteSheet.getSprite(128, 128, spriteWidth, spriteHeight);
-//            BufferedImage sprite7 = spriteSheet.getSprite(0, 192, spriteWidth, spriteHeight);
-//            BufferedImage sprite8 = spriteSheet.getSprite(128, 192, spriteWidth, spriteHeight);
-//
-//            String name = "idle";
-//            int i = 1;
-//
-//            ImageIO.write(sprite1, "png", new File("" + name + i++ + ".png"));
-//            ImageIO.write(sprite2, "png", new File("" + name + i++ + ".png"));
-//            ImageIO.write(sprite3, "png", new File("" + name + i++ + ".png"));
-//            ImageIO.write(sprite4, "png", new File("" + name + i++ + ".png"));
-//            ImageIO.write(sprite5, "png", new File("" + name + i++ + ".png"));
-//            ImageIO.write(sprite6, "png", new File("" + name + i++ + ".png"));
-//            ImageIO.write(sprite7, "png", new File("" + name + i++ + ".png"));
-//            ImageIO.write(sprite8, "png", new File("" + name + i++ + ".png"));
+            BufferedImage sprite1 = spriteSheet.getSprite(0, 0, spriteWidth, spriteHeight);
+            BufferedImage sprite2 = spriteSheet.getSprite(128, 0, spriteWidth, spriteHeight);
+            BufferedImage sprite3 = spriteSheet.getSprite(0, 64, spriteWidth, spriteHeight);
+            BufferedImage sprite4 = spriteSheet.getSprite(128, 64, spriteWidth, spriteHeight);
+            BufferedImage sprite5 = spriteSheet.getSprite(0, 128, spriteWidth, spriteHeight);
+            BufferedImage sprite6 = spriteSheet.getSprite(128, 128, spriteWidth, spriteHeight);
+            BufferedImage sprite7 = spriteSheet.getSprite(0, 192, spriteWidth, spriteHeight);
+            BufferedImage sprite8 = spriteSheet.getSprite(128, 192, spriteWidth, spriteHeight);
+
+            String name = "idle_right";
+            int i = 1;
+
+            ImageIO.write(sprite1, "png", new File("" + name + i++ + ".png"));
+            ImageIO.write(sprite2, "png", new File("" + name + i++ + ".png"));
+            ImageIO.write(sprite3, "png", new File("" + name + i++ + ".png"));
+            ImageIO.write(sprite4, "png", new File("" + name + i++ + ".png"));
+            ImageIO.write(sprite5, "png", new File("" + name + i++ + ".png"));
+            ImageIO.write(sprite6, "png", new File("" + name + i++ + ".png"));
+            ImageIO.write(sprite7, "png", new File("" + name + i++ + ".png"));
+            ImageIO.write(sprite8, "png", new File("" + name + i++ + ".png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
