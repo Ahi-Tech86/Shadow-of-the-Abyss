@@ -16,6 +16,12 @@ public class Player extends Entity {
 
     private String lastDirection = "right";
 
+    // VARIABLES FOR JUMPING AND GRAVITATION
+    private double velocity_Y = 0;
+    private final double gravity = 0.6;
+    private boolean isJumping = false;
+    private final double jumpSpeed = -10.0;
+
     public Player(GamePanel gamePanel, KeyHandler keyHandler) {
         this.gamePanel = gamePanel;
         this.keyHandler = keyHandler;
@@ -67,13 +73,8 @@ public class Player extends Entity {
         // HORIZONTAL MOVING
         if (keyHandler.leftPressed || keyHandler.rightPressed) {
             // KEYS HANDLE
-            if (keyHandler.rightPressed) {
-                direction = "right";
-                lastDirection = "right";
-            } else {
-                direction = "left";
-                lastDirection = "left";
-            }
+            direction = keyHandler.rightPressed ? "right" : "left";
+            lastDirection = direction;
 
             // CHECK TILE COLLISION
             collisionOn = false;
@@ -91,30 +92,41 @@ public class Player extends Entity {
                 }
             }
 
-            // SPRITES CHANGING
-            spriteCounter++;
-            if (spriteCounter > 5) {
-                spriteCounter = 0;
-                spriteNum++;
-                if (spriteNum > 8) {
-                    spriteNum = 1;
-                }
-            }
-
         } else {
             direction = "idle";
+        }
 
-            spriteCounter++;
-            if (spriteCounter > 7) {
-                spriteCounter = 0;
-                spriteNum++;
-                if (spriteNum > 8) {
-                    spriteNum = 1;
-                }
+        boolean onGround = gamePanel.collisionChecker.isOnGround(this);
+        if (keyHandler.spacePressed && onGround) {
+            isJumping = true;
+            velocity_Y = jumpSpeed;
+        }
+
+        if (isJumping || !onGround) {
+            velocity_Y += gravity;
+            worldY += velocity_Y;
+
+            boolean collisionWithTile = gamePanel.collisionChecker.isCollisionDetected(this);
+
+            if (collisionWithTile) {
+                isJumping = false;
+                velocity_Y = 0;
+                worldY = gamePanel.collisionChecker.getGroundY(this) * gamePanel.tileSize;
+            }
+        }
+
+        // SPRITES CHANGING
+        spriteCounter++;
+        if (spriteCounter > 5) {
+            spriteCounter = 0;
+            spriteNum++;
+            if (spriteNum > 8) {
+                spriteNum = 1;
             }
         }
 
         System.out.println(worldX + " " + worldY);
+        System.out.println(onGround + " " + keyHandler.spacePressed + " "  + isJumping + " " + velocity_Y);
     }
 
     public void draw(Graphics2D graphics2D) {

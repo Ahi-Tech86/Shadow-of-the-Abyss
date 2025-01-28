@@ -29,8 +29,7 @@ public class Entity {
 
     protected BufferedImage getSpriteImage(String path) {
         try {
-            BufferedImage image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(path)));
-            return image;
+            return ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(path)));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
