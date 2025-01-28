@@ -1,14 +1,38 @@
 package entities;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Objects;
 
 public class Entity {
+    public int speed;
     public String direction;
     public int worldX, worldY;
-    public int speed;
+
+    // VARIABLE FOR CHECKBOX
+    public Rectangle solidArea;
+
+    // VARIABLE FOR CHECKING SIDES COLLISION
+    public boolean collisionOn = false;
+
+    // VARIABLES FOR CHANGING SPRITES
     public int spriteCounter = 0;
     public int spriteNum = 1;
-    public Rectangle solidArea;
-    public boolean collisionOn = false;
+
+    // FOR IDLE STATE
+    BufferedImage[] leftIdle, rightIdle;
+    // FOR JUMPING STATE
+    BufferedImage[] leftJump, rightJump;
+    // FOR RUNNING STATE
+    BufferedImage[] leftRunning, rightRunning;
+
+    protected BufferedImage getSpriteImage(String path) {
+        try {
+            BufferedImage image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(path)));
+            return image;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
