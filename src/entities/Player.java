@@ -24,9 +24,6 @@ public class Player extends Entity {
     BufferedImage idleRight1, idleRight2, idleRight3, idleRight4, idleRight5, idleRight6, idleRight7, idleRight8;
 
     // VARIABLES FOR GRAVITY
-    private double velocityY;
-    private final double gravity = 0.3;
-    private final double jumpSpeed = - 6.5; // jump height
     private boolean isJumping = false;
 
     private String lastDirection = "right";
@@ -39,6 +36,7 @@ public class Player extends Entity {
         screenX = gamePanel.screenWidth / 2 + (gamePanel.tileSize * 2);
         screenY = gamePanel.screenHeight / 2 + (gamePanel.tileSize * 2);
 
+        // CHECKBOX SETUP
         solidArea = new Rectangle();
         solidArea.x = 57;
         solidArea.y = 17;
@@ -51,12 +49,12 @@ public class Player extends Entity {
 
     private void setDefaultVariables() {
         worldX = gamePanel.tileSize * 2;
-        worldY = gamePanel.tileSize * 11;
+        worldY = gamePanel.tileSize * 10;
         speed = 4;
         direction = "idle";
     }
 
-    public void getPlayerImage() {
+    private void getPlayerImage() {
         try {
             int i = 1;
 
@@ -125,33 +123,15 @@ public class Player extends Entity {
     }
 
     public void update() {
-        if (keyHandler.leftPressed || keyHandler.rightPressed || keyHandler.spacePressed) {
+        // HORIZONTAL MOVING
+        if (keyHandler.leftPressed || keyHandler.rightPressed) {
             // KEYS HANDLE
-            if (keyHandler.upPressed) {
-
-            } else if (keyHandler.downPressed) {
-
-            } else if (keyHandler.rightPressed) {
+            if (keyHandler.rightPressed) {
                 direction = "right";
                 lastDirection = "right";
-            } else if (keyHandler.leftPressed) {
+            } else {
                 direction = "left";
                 lastDirection = "left";
-            }
-
-            // SPRITES CHANGING
-            if (keyHandler.rightPressed || keyHandler.leftPressed || isJumping) {
-                spriteCounter++;
-                if (spriteCounter > 5) {
-                    spriteCounter = 0;
-                    spriteNum++;
-                    if (spriteNum > 8) {
-                        spriteNum = 1;
-                    }
-                }
-            } else {
-                spriteCounter = 0;
-                spriteNum = 1;
             }
 
             // CHECK TILE COLLISION
@@ -161,12 +141,6 @@ public class Player extends Entity {
             // IF COLLISION IS FALSE, PLAYER CAN MOVE
             if (!collisionOn) {
                 switch (direction) {
-                    case "up":
-                        worldY -= 0;
-                        break;
-                    case "down":
-                        worldY += 0;
-                        break;
                     case "right":
                         worldX += speed;
                         break;
@@ -175,6 +149,17 @@ public class Player extends Entity {
                         break;
                 }
             }
+
+            // SPRITES CHANGING
+            spriteCounter++;
+            if (spriteCounter > 5) {
+                spriteCounter = 0;
+                spriteNum++;
+                if (spriteNum > 8) {
+                    spriteNum = 1;
+                }
+            }
+
         } else {
             direction = "idle";
 
@@ -188,21 +173,7 @@ public class Player extends Entity {
             }
         }
 
-        if (keyHandler.spacePressed && !isJumping) {
-            velocityY = jumpSpeed;
-            isJumping = true;
-        }
-
-        // APPLY GRAVITY
-        velocityY += gravity;
-        worldY += velocityY;
-
-        // Check if player has landed
-        if (worldY >= gamePanel.screenHeight - (2 * gamePanel.tileSize)) {
-            worldY = gamePanel.screenHeight - (2 * gamePanel.tileSize);
-            velocityY = 0;
-            isJumping = false;
-        }
+        System.out.println(worldX + " " + worldY);
     }
 
     public void draw(Graphics2D graphics2D) {
@@ -392,10 +363,13 @@ public class Player extends Entity {
         graphics2D.drawImage(image, screenX, screenY, 128, 64, null);
 
         // CHECKBOX DISPLAYING
-//        Composite originalComposite = graphics2D.getComposite();
-//        graphics2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.9f));
-//        graphics2D.setColor(Color.RED);
-//        graphics2D.drawRect(this.screenX + this.solidArea.x, this.screenY + this.solidArea.y, this.solidArea.width, this.solidArea.height);
-//        graphics2D.setComposite(originalComposite);
+        Composite originalComposite = graphics2D.getComposite();
+        graphics2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.9f));
+        graphics2D.setColor(Color.RED);
+        graphics2D.drawRect(this.screenX + this.solidArea.x, this.screenY + this.solidArea.y, this.solidArea.width, this.solidArea.height);
+
+        graphics2D.setColor(Color.GREEN);
+        graphics2D.drawRect(screenX, screenY, 128, 64);
+        graphics2D.setComposite(originalComposite);
     }
 }

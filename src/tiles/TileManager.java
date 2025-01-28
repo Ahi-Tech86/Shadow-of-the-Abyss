@@ -76,26 +76,6 @@ public class TileManager {
     }
 
     public void draw(Graphics2D graphics2D) {
-//        int x = 0;
-//
-//        graphics2D.drawImage(tiles[0].image, x, 704, gamePanel.tileSize, gamePanel.tileSize, null);
-//        graphics2D.drawImage(tiles[0].image, x+64, 704, gamePanel.tileSize, gamePanel.tileSize, null);
-//        graphics2D.drawImage(tiles[0].image, x+64*2, 704, gamePanel.tileSize, gamePanel.tileSize, null);
-//        graphics2D.drawImage(tiles[0].image, x+64*3, 704, gamePanel.tileSize, gamePanel.tileSize, null);
-//        graphics2D.drawImage(tiles[0].image, x+64*4, 704, gamePanel.tileSize, gamePanel.tileSize, null);
-//        graphics2D.drawImage(tiles[0].image, x+64*5, 704, gamePanel.tileSize, gamePanel.tileSize, null);
-//        graphics2D.drawImage(tiles[0].image, x+64*6, 704, gamePanel.tileSize, gamePanel.tileSize, null);
-//        graphics2D.drawImage(tiles[0].image, x+64*7, 704, gamePanel.tileSize, gamePanel.tileSize, null);
-//        graphics2D.drawImage(tiles[0].image, x+64*8, 704, gamePanel.tileSize, gamePanel.tileSize, null);
-//        graphics2D.drawImage(tiles[0].image, x+64*9, 704, gamePanel.tileSize, gamePanel.tileSize, null);
-//        graphics2D.drawImage(tiles[0].image, x+64*10, 704, gamePanel.tileSize, gamePanel.tileSize, null);
-//        graphics2D.drawImage(tiles[0].image, x+64*11, 704, gamePanel.tileSize, gamePanel.tileSize, null);
-//        graphics2D.drawImage(tiles[0].image, x+64*12, 704, gamePanel.tileSize, gamePanel.tileSize, null);
-//        graphics2D.drawImage(tiles[0].image, x+64*13, 704, gamePanel.tileSize, gamePanel.tileSize, null);
-//        graphics2D.drawImage(tiles[0].image, x+64*14, 704, gamePanel.tileSize, gamePanel.tileSize, null);
-//        graphics2D.drawImage(tiles[0].image, x+64*15, 704, gamePanel.tileSize, gamePanel.tileSize, null);
-//        graphics2D.drawImage(tiles[1].image, x+64*7, 704 - 48, 48, 48, null);
-
         int worldCol = 0;
         int worldRow = 0;
 
