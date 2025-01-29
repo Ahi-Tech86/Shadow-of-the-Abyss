@@ -27,8 +27,6 @@ public class GamePanel extends JPanel implements Runnable {
     // WORLD SETTINGS
     public final int maxWorldCol = 60;
     public final int maxWorldRow = 12;
-    public final int worldWidth = tileSize * maxWorldCol;
-    public final int worldHeight = tileSize * maxScreenRow;
 
     // BACKGROUND IMAGES
     private BufferedImage backgroundLayer1;
@@ -39,13 +37,17 @@ public class GamePanel extends JPanel implements Runnable {
     // FPS
     int FPS = 60;
 
+    // SYSTEM
     Thread gameThread;
+    Sound sound = new Sound();
     KeyHandler keyHandler = new KeyHandler();
-    public SuperObject[] objects = new SuperObject[10];
     TileManager tileManager = new TileManager(this);
-    public Player player = new Player(this, keyHandler);
     public AssetSetter assetSetter = new AssetSetter(this);
     public CollisionChecker collisionChecker = new CollisionChecker(this);
+
+    // PLAYER AND OBJECTS
+    public SuperObject[] objects = new SuperObject[10];
+    public Player player = new Player(this, keyHandler);
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -111,8 +113,24 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
+    private void playMusic(int i) {
+        sound.setFile(i);
+        sound.playSound();
+        sound.loopSound();
+    }
+
+    private void stopMusic() {
+        sound.stopSound();
+    }
+
+    public void playSE(int i) {
+        sound.setFile(i);
+        sound.playSound();
+    }
+
     public void setupGame() {
         assetSetter.setObject();
+        playMusic(0);
     }
 
     public void update() {
@@ -135,7 +153,7 @@ public class GamePanel extends JPanel implements Runnable {
         // DRAWING OBJECTS
         for (SuperObject object : objects) {
             if (object != null) {
-                object.draw(graphics2D, this);
+                object.draw(graphics2D, this);;
             }
         }
 

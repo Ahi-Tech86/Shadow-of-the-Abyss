@@ -12,6 +12,7 @@ public class Entity {
 
     // VARIABLE FOR CHECKBOX
     public Rectangle solidArea;
+    public int solidAreaDefaultX, solidAreaDefaultY;
 
     // VARIABLE FOR CHECKING SIDES COLLISION
     public boolean collisionOn = false;

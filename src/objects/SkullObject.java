@@ -4,20 +4,20 @@ import main.GamePanel;
 
 import java.awt.*;
 
-public class CrystalObject extends SuperObject {
+public class SkullObject extends SuperObject {
 
-    public CrystalObject(int worldX, int worldY, boolean isSolid) {
-        name = "Crystal";
+    public SkullObject(int worldX, int worldY, boolean isSolid) {
+        name = "Skull";
         this.worldX = worldX;
         this.worldY = worldY;
         this.collision = isSolid;
         this.solidArea.x = 48;
         this.solidArea.y = 48;
-        this.solidAreaDefaultX = solidArea.x;
-        this.solidAreaDefaultY = solidArea.y;
+        this.solidAreaDefaultX = this.solidArea.x;
+        this.solidAreaDefaultY = this.solidArea.y;
         this.solidArea.width = 16;
         this.solidArea.height = 16;
-        image = getSpriteImage("/objects/crystal.png");
+        image = getSpriteImage("/objects/skull.png");
     }
 
     @Override
@@ -26,6 +26,9 @@ public class CrystalObject extends SuperObject {
             int screenX = worldX - gamePanel.player.worldX + gamePanel.player.screenX;
             int screenY = worldY - gamePanel.player.worldY + gamePanel.player.screenY;
             graphics2D.drawImage(image, screenX + 48, screenY + 48, 16, 16, null);
+
+            // draw checkbox
+            //graphics2D.drawRect(screenX + this.solidArea.x, screenY + this.solidArea.y, this.solidArea.width, this.solidArea.height);
         }
     }
 }

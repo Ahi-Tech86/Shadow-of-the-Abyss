@@ -14,6 +14,8 @@ public class Player extends Entity {
     public final int screenX;
     public final int screenY;
 
+    int hasKey = 0;
+
     private String lastDirection = "right";
 
     // VARIABLES FOR JUMPING AND GRAVITATION
@@ -22,6 +24,7 @@ public class Player extends Entity {
     private boolean isJumping = false;
     private final double jumpSpeed = -10.0;
 
+    private final int climbSpeed = 2;
     public boolean isClimbing = false;
     BufferedImage[] climb = new BufferedImage[6];
 
@@ -37,6 +40,8 @@ public class Player extends Entity {
         solidArea = new Rectangle();
         solidArea.x = 57;
         solidArea.y = 17;
+        solidAreaDefaultX = solidArea.x;
+        solidAreaDefaultY = solidArea.y;
         solidArea.width = 18;
         solidArea.height = 46;
 
@@ -88,6 +93,10 @@ public class Player extends Entity {
             collisionOn = false;
             gamePanel.collisionChecker.checkTile(this);
 
+            // CHECK OBJECT COLLISION
+            int objectIndex = gamePanel.collisionChecker.checkObject(this, true);
+            pickUpObject(objectIndex);
+
             // IF COLLISION IS FALSE, PLAYER CAN MOVE
             if (!collisionOn) {
                 switch (direction) {
@@ -111,7 +120,7 @@ public class Player extends Entity {
         }
 
         if (isClimbing) {
-            worldY -= speed;
+            worldY -= climbSpeed;
         }
 
         if (isClimbing && !isNearLadder) {
@@ -126,7 +135,7 @@ public class Player extends Entity {
 
         if ((isJumping || !onGround) && !isClimbing) {
             velocity_Y += gravity;
-            worldY += velocity_Y;
+            worldY += (int) velocity_Y;
 
             boolean collisionWithTile = gamePanel.collisionChecker.isCollisionDetected(this);
 
@@ -137,69 +146,81 @@ public class Player extends Entity {
             }
         }
 
-        System.out.println(isClimbing + " " + onGround);
-        System.out.println(velocity_Y);
+        System.out.println(hasKey);
 
         // SPRITES CHANGING
         spriteCounter++;
-        if (spriteCounter > 5) {
-            spriteCounter = 0;
-            spriteNum++;
+        if (isClimbing) {
+            if (spriteCounter > 10) {
+                spriteCounter = 0;
+                spriteNum++;
 
-            if (isClimbing) {
                 if (spriteNum > 6) {
                     spriteNum = 1;
                 }
-            } else {
+            }
+        } else {
+            if (spriteCounter > 5) {
+                spriteCounter = 0;
+                spriteNum++;
+
                 if (spriteNum > 8) {
                     spriteNum = 1;
                 }
             }
         }
+
+    }
+
+    private void pickUpObject(int objectIndex) {
+        if (objectIndex != 999) {
+            String objectName = gamePanel.objects[objectIndex].name;
+
+            if (objectName.equals("Crystal")) {
+                hasKey++;
+            }
+
+            gamePanel.objects[objectIndex] = null;
+        }
     }
 
     public void draw(Graphics2D graphics2D) {
-        BufferedImage image = null;
+        BufferedImage image = getCurrentSprite();
+        graphics2D.drawImage(image, screenX, screenY, 128, 64, null);
+        drawHitbox(graphics2D);
+    }
+
+    private BufferedImage getCurrentSprite() {
+        if (isClimbing) {
+            return climb[spriteNum - 1];
+        }
 
         if (isJumping) {
-            switch (lastDirection) {
-                case "left":
-                    image = leftJump[spriteNum - 1];
-                    break;
-                case "right":
-                    image = rightJump[spriteNum - 1];
-                    break;
-            }
-
-        } else {
-            switch (direction) {
-                case "right":
-                    image = rightRunning[spriteNum - 1];
-                    break;
-                case "left":
-                    image = leftRunning[spriteNum - 1];
-                    break;
-                case "idle":
-                    if (lastDirection.equals("right")) {
-                        image = rightIdle[spriteNum - 1];
-                    } else if (lastDirection.equals("left")) {
-                        image = leftIdle[spriteNum - 1];
-                    }
-                    break;
-            }
+            return lastDirection.equals("right") ? rightJump[spriteNum - 1] : leftJump[spriteNum - 1];
         }
 
-        if (isClimbing) {
-            image = climb[spriteNum - 1];
+        switch (direction) {
+            case "right":
+                return rightRunning[spriteNum - 1];
+            case "left":
+                return leftRunning[spriteNum - 1];
+            case "idle":
+                return lastDirection.equals("right") ? rightIdle[spriteNum - 1] : leftIdle[spriteNum - 1];
+            default:
+                return null;
         }
+    }
 
-        graphics2D.drawImage(image, screenX, screenY, 128, 64, null);
-
-        // CHECKBOX DISPLAYING
+    private void drawHitbox(Graphics2D graphics2D) {
         Composite originalComposite = graphics2D.getComposite();
         graphics2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.9f));
         graphics2D.setColor(Color.RED);
-        graphics2D.drawRect(this.screenX + this.solidArea.x, this.screenY + this.solidArea.y, this.solidArea.width, this.solidArea.height);
+        graphics2D.drawRect(
+                this.screenX + this.solidArea.x,
+                this.screenY + this.solidArea.y,
+                this.solidArea.width,
+                this.solidArea.height
+        );
 
         graphics2D.setColor(Color.GREEN);
         graphics2D.drawRect(screenX, screenY, 128, 64);
