@@ -1,6 +1,7 @@
 package main;
 
 import entities.Player;
+import objects.SuperObject;
 import tiles.TileManager;
 
 import javax.imageio.ImageIO;
@@ -40,8 +41,10 @@ public class GamePanel extends JPanel implements Runnable {
 
     Thread gameThread;
     KeyHandler keyHandler = new KeyHandler();
+    public SuperObject[] objects = new SuperObject[10];
     TileManager tileManager = new TileManager(this);
     public Player player = new Player(this, keyHandler);
+    public AssetSetter assetSetter = new AssetSetter(this);
     public CollisionChecker collisionChecker = new CollisionChecker(this);
 
     public GamePanel() {
@@ -108,6 +111,10 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
+    public void setupGame() {
+        assetSetter.setObject();
+    }
+
     public void update() {
         player.update();
     }
@@ -116,12 +123,22 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(graphics);
         Graphics2D graphics2D = (Graphics2D) graphics;
 
+        // DRAWING BACKGROUND LAYERS
         graphics2D.drawImage(backgroundLayer1, 0, 0, screenWidth, screenHeight, null);
         graphics2D.drawImage(backgroundLayer2, 0, 0, screenWidth, screenHeight, null);
         graphics2D.drawImage(backgroundLayer3, 0, 0, screenWidth, screenHeight, null);
         graphics2D.drawImage(backgroundLayer4, 0, 0, screenWidth, screenHeight, null);
 
+        // DRAWING TILES
         tileManager.draw(graphics2D);
+
+        // DRAWING OBJECTS
+        for (SuperObject object : objects) {
+            if (object != null) {
+                object.draw(graphics2D, this);
+            }
+        }
+
         player.draw(graphics2D);
 
         graphics.dispose();
