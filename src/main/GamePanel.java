@@ -3,8 +3,12 @@ package main;
 import entities.Player;
 import tiles.TileManager;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.Objects;
 
 public class GamePanel extends JPanel implements Runnable {
 
@@ -13,9 +17,9 @@ public class GamePanel extends JPanel implements Runnable {
     final int originalTileSize = 32;
     public final int tileSize = originalTileSize * scale;
 
-    // 1024x768
+    // 1024x576
     public final int maxScreenCol = 16;
-    public final int maxScreenRow = 12;
+    public final int maxScreenRow = 9;
     public final int screenWidth = tileSize * maxScreenCol;
     public final int screenHeight = tileSize * maxScreenRow;
 
@@ -25,14 +29,20 @@ public class GamePanel extends JPanel implements Runnable {
     public final int worldWidth = tileSize * maxWorldCol;
     public final int worldHeight = tileSize * maxScreenRow;
 
+    // BACKGROUND IMAGES
+    private BufferedImage backgroundLayer1;
+    private BufferedImage backgroundLayer2;
+    private BufferedImage backgroundLayer3;
+    private BufferedImage backgroundLayer4;
+
     // FPS
     int FPS = 60;
 
     Thread gameThread;
-    TileManager tileManager = new TileManager(this);
     KeyHandler keyHandler = new KeyHandler();
-    public CollisionChecker collisionChecker = new CollisionChecker(this);
+    TileManager tileManager = new TileManager(this);
     public Player player = new Player(this, keyHandler);
+    public CollisionChecker collisionChecker = new CollisionChecker(this);
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -40,6 +50,8 @@ public class GamePanel extends JPanel implements Runnable {
         this.setDoubleBuffered(true);
         this.addKeyListener(keyHandler);
         this.setFocusable(true);
+
+        loadBackgroundImages();
     }
 
     public void startGameThread() {
@@ -85,15 +97,29 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
+    private void loadBackgroundImages() {
+        try {
+            backgroundLayer1 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/background/background.png")));
+            backgroundLayer2 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/background/background2.png")));
+            backgroundLayer3 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/background/background3.png")));
+            backgroundLayer4 = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/background/background4.png")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void update() {
         player.update();
     }
 
     public void paintComponent(Graphics graphics) {
-
         super.paintComponent(graphics);
-
         Graphics2D graphics2D = (Graphics2D) graphics;
+
+        graphics2D.drawImage(backgroundLayer1, 0, 0, screenWidth, screenHeight, null);
+        graphics2D.drawImage(backgroundLayer2, 0, 0, screenWidth, screenHeight, null);
+        graphics2D.drawImage(backgroundLayer3, 0, 0, screenWidth, screenHeight, null);
+        graphics2D.drawImage(backgroundLayer4, 0, 0, screenWidth, screenHeight, null);
 
         tileManager.draw(graphics2D);
         player.draw(graphics2D);

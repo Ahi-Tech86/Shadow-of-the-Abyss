@@ -124,29 +124,39 @@ public class Player extends Entity {
                 spriteNum = 1;
             }
         }
-
-        System.out.println(worldX + " " + worldY);
-        System.out.println(onGround + " " + keyHandler.spacePressed + " "  + isJumping + " " + velocity_Y);
     }
 
     public void draw(Graphics2D graphics2D) {
         BufferedImage image = null;
 
-        switch (direction) {
-            case "right":
-                image = rightRunning[spriteNum - 1];
-                break;
-            case "left":
-                image = leftRunning[spriteNum - 1];
-                break;
-            case "idle":
-                if (lastDirection.equals("right")) {
-                    image = rightIdle[spriteNum - 1];
-                } else if (lastDirection.equals("left")) {
-                    image = leftIdle[spriteNum - 1];
-                }
-                break;
+        if (isJumping) {
+            switch (lastDirection) {
+                case "left":
+                    image = leftJump[spriteNum - 1];
+                    break;
+                case "right":
+                    image = rightJump[spriteNum - 1];
+                    break;
+            }
+
+        } else {
+            switch (direction) {
+                case "right":
+                    image = rightRunning[spriteNum - 1];
+                    break;
+                case "left":
+                    image = leftRunning[spriteNum - 1];
+                    break;
+                case "idle":
+                    if (lastDirection.equals("right")) {
+                        image = rightIdle[spriteNum - 1];
+                    } else if (lastDirection.equals("left")) {
+                        image = leftIdle[spriteNum - 1];
+                    }
+                    break;
+            }
         }
+
 
         graphics2D.drawImage(image, screenX, screenY, 128, 64, null);
 
