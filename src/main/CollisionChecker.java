@@ -1,10 +1,16 @@
 package main;
 
 import entities.Entity;
+import tiles.Ladder;
+
+import java.awt.*;
 
 public class CollisionChecker {
 
     GamePanel gamePanel;
+
+    private final int ladderTileNum = 3;
+    private final int ladderBrickTileNum = 4;
 
     public CollisionChecker(GamePanel gamePanel) {
         this.gamePanel = gamePanel;
@@ -47,7 +53,7 @@ public class CollisionChecker {
 
     public int getGroundY(Entity entity) {
         int entityCheckboxBottomWorldY = entity.worldY + entity.solidArea.y + entity.solidArea.height;
-        return (int) (entityCheckboxBottomWorldY / gamePanel.tileSize) - 1;
+        return (entityCheckboxBottomWorldY / gamePanel.tileSize) - 1;
     }
 
     public boolean isOnGround(Entity entity) {
@@ -90,5 +96,49 @@ public class CollisionChecker {
         int tileNumRight = gamePanel.tileManager.mapTilesNum[rightCol][bottomRow];
 
         return gamePanel.tileManager.tiles[tileNumLeft].collision || gamePanel.tileManager.tiles[tileNumRight].collision;
+    }
+
+    public boolean isPlayerNearLadder(Entity entity) {
+        int entityLeftWorldX = entity.worldX + entity.solidArea.x;
+        int entityRightWorldX = entity.worldX + entity.solidArea.x + entity.solidArea.width;
+        int entityTopWorldY = entity.worldY + entity.solidArea.y;
+        int entityBottomWorldY = entity.worldY + entity.solidArea.y + entity.solidArea.height;
+
+        int entityLeftCol = entityLeftWorldX / gamePanel.tileSize;
+        int entityRightCol = entityRightWorldX / gamePanel.tileSize;
+        int entityTopRow = entityTopWorldY / gamePanel.tileSize;
+        int entityBottomRow = entityBottomWorldY / gamePanel.tileSize;
+
+        for (int row = entityTopRow; row <= entityBottomRow; row++) {
+            for (int col = entityLeftCol; col <= entityRightCol; col++) {
+                int tileNum = gamePanel.tileManager.mapTilesNum[col][row];
+                if (tileNum == ladderTileNum || tileNum == ladderBrickTileNum) {
+                    Ladder ladder = (Ladder) gamePanel.tileManager.tiles[tileNum];
+
+                    int ladderWorldX = col * gamePanel.tileSize;
+                    int ladderWorldY = row * gamePanel.tileSize;
+
+                    Rectangle ladderCheckbox = new Rectangle(
+                            ladderWorldX + ladder.solidArea.x,
+                            ladderWorldY + ladder.solidArea.y,
+                            ladder.solidArea.width,
+                            ladder.solidArea.height
+                    );
+
+                    Rectangle playerCheckbox = new Rectangle(
+                            entityLeftWorldX,
+                            entityTopWorldY,
+                            entity.solidArea.width,
+                            entity.solidArea.height
+                    );
+
+                    if (playerCheckbox.intersects(ladderCheckbox)) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 }

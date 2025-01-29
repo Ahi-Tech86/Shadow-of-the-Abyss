@@ -22,6 +22,9 @@ public class Player extends Entity {
     private boolean isJumping = false;
     private final double jumpSpeed = -10.0;
 
+    public boolean isClimbing = false;
+    BufferedImage[] climb = new BufferedImage[6];
+
     public Player(GamePanel gamePanel, KeyHandler keyHandler) {
         this.gamePanel = gamePanel;
         this.keyHandler = keyHandler;
@@ -65,6 +68,11 @@ public class Player extends Entity {
             rightRunning[i] = getSpriteImage("/character/running/right" + k + ".png");
             leftJump[i] = getSpriteImage("/character/jumping/jump_left" + k + ".png");
             rightJump[i] = getSpriteImage("/character/jumping/jump_right" + k + ".png");
+
+            if (k < 7) {
+                climb[i] = getSpriteImage("/character/climbing/climb" + k + ".png");
+            }
+
             ++k;
         }
     }
@@ -96,13 +104,27 @@ public class Player extends Entity {
             direction = "idle";
         }
 
+        boolean isNearLadder = gamePanel.collisionChecker.isPlayerNearLadder(this);
+        if (keyHandler.ePressed && isNearLadder) {
+            isClimbing = true;
+            spriteNum = 1;
+        }
+
+        if (isClimbing) {
+            worldY -= speed;
+        }
+
+        if (isClimbing && !isNearLadder) {
+            isClimbing = false;
+        }
+
         boolean onGround = gamePanel.collisionChecker.isOnGround(this);
-        if (keyHandler.spacePressed && onGround) {
+        if (keyHandler.spacePressed && onGround && !isClimbing) {
             isJumping = true;
             velocity_Y = jumpSpeed;
         }
 
-        if (isJumping || !onGround) {
+        if ((isJumping || !onGround) && !isClimbing) {
             velocity_Y += gravity;
             worldY += velocity_Y;
 
@@ -115,13 +137,23 @@ public class Player extends Entity {
             }
         }
 
+        System.out.println(isClimbing + " " + onGround);
+        System.out.println(velocity_Y);
+
         // SPRITES CHANGING
         spriteCounter++;
         if (spriteCounter > 5) {
             spriteCounter = 0;
             spriteNum++;
-            if (spriteNum > 8) {
-                spriteNum = 1;
+
+            if (isClimbing) {
+                if (spriteNum > 6) {
+                    spriteNum = 1;
+                }
+            } else {
+                if (spriteNum > 8) {
+                    spriteNum = 1;
+                }
             }
         }
     }
@@ -157,6 +189,9 @@ public class Player extends Entity {
             }
         }
 
+        if (isClimbing) {
+            image = climb[spriteNum - 1];
+        }
 
         graphics2D.drawImage(image, screenX, screenY, 128, 64, null);
 

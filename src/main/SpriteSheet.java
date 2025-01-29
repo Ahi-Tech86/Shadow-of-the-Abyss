@@ -23,7 +23,7 @@ public class SpriteSheet {
 
     public static void main(String[] args) {
         try {
-            SpriteSheet spriteSheet = new SpriteSheet("/character/idle/originalAssets/Idle_right.png");
+            SpriteSheet spriteSheet = new SpriteSheet("/character/climbing/originalAssets/Climb.png");
 
             int spriteWidth = 128;
             int spriteHeight = 64;
@@ -37,7 +37,7 @@ public class SpriteSheet {
             BufferedImage sprite7 = spriteSheet.getSprite(0, 192, spriteWidth, spriteHeight);
             BufferedImage sprite8 = spriteSheet.getSprite(128, 192, spriteWidth, spriteHeight);
 
-            String name = "idle_right";
+            String name = "climb";
             int i = 1;
 
             ImageIO.write(sprite1, "png", new File("" + name + i++ + ".png"));
@@ -46,8 +46,8 @@ public class SpriteSheet {
             ImageIO.write(sprite4, "png", new File("" + name + i++ + ".png"));
             ImageIO.write(sprite5, "png", new File("" + name + i++ + ".png"));
             ImageIO.write(sprite6, "png", new File("" + name + i++ + ".png"));
-            ImageIO.write(sprite7, "png", new File("" + name + i++ + ".png"));
-            ImageIO.write(sprite8, "png", new File("" + name + i++ + ".png"));
+//            ImageIO.write(sprite7, "png", new File("" + name + i++ + ".png"));
+//            ImageIO.write(sprite8, "png", new File("" + name + i++ + ".png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
