@@ -11,14 +11,10 @@ public class SpriteFlipper {
 
     public static void main(String[] args) {
         String[] spritesPath = {
-                "/character/jumping/jump_right1.png",
-                "/character/jumping/jump_right2.png",
-                "/character/jumping/jump_right3.png",
-                "/character/jumping/jump_right4.png",
-                "/character/jumping/jump_right5.png",
-                "/character/jumping/jump_right6.png",
-                "/character/jumping/jump_right7.png",
-                "/character/jumping/jump_right8.png"
+                "/monsters/FlyingEye/takeHit/take_hit_right1.png",
+                "/monsters/FlyingEye/takeHit/take_hit_right2.png",
+                "/monsters/FlyingEye/takeHit/take_hit_right3.png",
+                "/monsters/FlyingEye/takeHit/take_hit_right4.png"
         };
 
         int i = 1;
@@ -28,7 +24,7 @@ public class SpriteFlipper {
                         Objects.requireNonNull(SpriteFlipper.class.getResourceAsStream(path))
                 );
                 BufferedImage flippedImage = flipImageHorizontally(originalImage);
-                ImageIO.write(flippedImage, "png", new File("jump_left" + i++ + ".png"));
+                ImageIO.write(flippedImage, "png", new File("take_hit_left" + i++ + ".png"));
             } catch (IOException e) {
                 e.printStackTrace();
             }

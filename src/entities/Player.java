@@ -99,6 +99,12 @@ public class Player extends Entity {
             int objectIndex = gamePanel.collisionChecker.checkObject(this, true);
             pickUpObject(objectIndex);
 
+            // CHECK MONSTER COLLISION
+            int monsterIndex = gamePanel.collisionChecker.checkEntity(this, gamePanel.monsters);
+            if (monsterIndex != 999) {
+                collisionOn = true;
+            }
+
             // IF COLLISION IS FALSE, PLAYER CAN MOVE
             if (!collisionOn) {
                 switch (direction) {
