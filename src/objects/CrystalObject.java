@@ -6,6 +6,10 @@ import java.awt.*;
 
 public class CrystalObject extends SuperObject {
 
+    public CrystalObject() {
+        image = getSpriteImage("/objects/crystal.png");
+    }
+
     public CrystalObject(int worldX, int worldY, boolean isSolid) {
         name = "Crystal";
         this.worldX = worldX;

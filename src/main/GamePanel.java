@@ -39,15 +39,22 @@ public class GamePanel extends JPanel implements Runnable {
 
     // SYSTEM
     Thread gameThread;
-    Sound sound = new Sound();
-    KeyHandler keyHandler = new KeyHandler();
+    Sound se = new Sound();
+    Sound music = new Sound();
+    KeyHandler keyHandler = new KeyHandler(this);
     TileManager tileManager = new TileManager(this);
     public AssetSetter assetSetter = new AssetSetter(this);
+    public UserInterface userInterface = new UserInterface(this);
     public CollisionChecker collisionChecker = new CollisionChecker(this);
 
     // PLAYER AND OBJECTS
     public SuperObject[] objects = new SuperObject[10];
     public Player player = new Player(this, keyHandler);
+
+    // GAME STATES
+    public int gameState;
+    public final int PLAY_STATE = 1;
+    public final int PAUSE_STATE = 2;
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -114,32 +121,44 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     private void playMusic(int i) {
-        sound.setFile(i);
-        sound.playSound();
-        sound.loopSound();
+        music.setFile(i);
+        music.playSound();
+        music.loopSound();
     }
 
     private void stopMusic() {
-        sound.stopSound();
+        music.stopSound();
     }
 
     public void playSE(int i) {
-        sound.setFile(i);
-        sound.playSound();
+        se.setFile(i);
+        se.playSound();
     }
 
     public void setupGame() {
         assetSetter.setObject();
         playMusic(0);
+        stopMusic();
+        gameState = PLAY_STATE;
     }
 
     public void update() {
-        player.update();
+        if (gameState == PLAY_STATE) {
+            player.update();
+        } else if (gameState == PAUSE_STATE) {
+            // nothing
+        }
     }
 
     public void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
         Graphics2D graphics2D = (Graphics2D) graphics;
+
+        // DEBUG
+        long drawStart = 0;
+        if (keyHandler.checkDrawTime) {
+            drawStart = System.nanoTime();
+        }
 
         // DRAWING BACKGROUND LAYERS
         graphics2D.drawImage(backgroundLayer1, 0, 0, screenWidth, screenHeight, null);
@@ -158,6 +177,17 @@ public class GamePanel extends JPanel implements Runnable {
         }
 
         player.draw(graphics2D);
+
+        userInterface.draw(graphics2D);
+
+        // END DRAW
+        if (keyHandler.checkDrawTime) {
+            long drawEnd = System.nanoTime();
+            long passed = drawEnd - drawStart;
+            graphics2D.setColor(Color.WHITE);
+            graphics2D.drawString("Draw time: " + passed, 10, 400);
+            System.out.println(passed);
+        }
 
         graphics.dispose();
     }

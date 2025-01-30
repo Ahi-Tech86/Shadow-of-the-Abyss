@@ -9,6 +9,7 @@ public class Entity {
     public int speed;
     public String direction;
     public int worldX, worldY;
+    public String lastDirection;
 
     // VARIABLE FOR CHECKBOX
     public Rectangle solidArea;

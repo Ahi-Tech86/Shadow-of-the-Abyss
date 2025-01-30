@@ -14,10 +14,6 @@ public class Player extends Entity {
     public final int screenX;
     public final int screenY;
 
-    int hasKey = 0;
-
-    private String lastDirection = "right";
-
     // VARIABLES FOR JUMPING AND GRAVITATION
     private double velocity_Y = 0;
     private final double gravity = 0.6;
@@ -44,6 +40,8 @@ public class Player extends Entity {
         solidAreaDefaultY = solidArea.y;
         solidArea.width = 18;
         solidArea.height = 46;
+
+        lastDirection = "right";
 
         setDefaultVariables();
         getPlayerSprites();
@@ -114,7 +112,7 @@ public class Player extends Entity {
         }
 
         boolean isNearLadder = gamePanel.collisionChecker.isPlayerNearLadder(this);
-        if (keyHandler.ePressed && isNearLadder) {
+        if (keyHandler.fPressed && isNearLadder) {
             isClimbing = true;
             spriteNum = 1;
         }
@@ -146,8 +144,6 @@ public class Player extends Entity {
             }
         }
 
-        System.out.println(hasKey);
-
         // SPRITES CHANGING
         spriteCounter++;
         if (isClimbing) {
@@ -177,7 +173,7 @@ public class Player extends Entity {
             String objectName = gamePanel.objects[objectIndex].name;
 
             if (objectName.equals("Crystal")) {
-                hasKey++;
+                gamePanel.userInterface.showMessage("You got a crystal");
             }
 
             gamePanel.objects[objectIndex] = null;

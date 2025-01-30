@@ -10,7 +10,7 @@ import java.util.Objects;
 public abstract class SuperObject {
     public String name;
     public int worldX, worldY;
-    protected BufferedImage image;
+    public BufferedImage image;
     public boolean collision = false;
     public int solidAreaDefaultX = 0, solidAreaDefaultY = 0;
     public Rectangle solidArea = new Rectangle(0, 0, 48, 48);
