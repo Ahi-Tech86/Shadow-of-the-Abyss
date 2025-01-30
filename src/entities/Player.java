@@ -8,7 +8,6 @@ import java.awt.image.BufferedImage;
 
 public class Player extends Entity {
 
-    GamePanel gamePanel;
     KeyHandler keyHandler;
 
     public final int screenX;
@@ -20,12 +19,16 @@ public class Player extends Entity {
     private boolean isJumping = false;
     private final double jumpSpeed = -10.0;
 
+    // VARIABLES FOR CLIMBING
     private final int climbSpeed = 2;
     public boolean isClimbing = false;
-    BufferedImage[] climb = new BufferedImage[6];
+
+    // SPRITE ARRAYS
+    BufferedImage[] climb;
+    BufferedImage[] leftJump, rightJump;
 
     public Player(GamePanel gamePanel, KeyHandler keyHandler) {
-        this.gamePanel = gamePanel;
+        super(gamePanel);
         this.keyHandler = keyHandler;
 
         // VARIABLES FOR SET UP CAMERA
@@ -57,6 +60,7 @@ public class Player extends Entity {
     private void getPlayerSprites() {
         int  k = 1;
 
+        climb = new BufferedImage[6];
         leftIdle = new BufferedImage[8];
         rightIdle = new BufferedImage[8];
         leftJump = new BufferedImage[8];

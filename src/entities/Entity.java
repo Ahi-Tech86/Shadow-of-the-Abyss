@@ -1,11 +1,18 @@
 package entities;
 
+import main.GamePanel;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Objects;
 
 public class Entity {
+
+    // SYSTEM
+    GamePanel gamePanel;
+
+    // VARIABLES
     public int speed;
     public String direction;
     public int worldX, worldY;
@@ -24,8 +31,6 @@ public class Entity {
 
     // FOR IDLE STATE
     BufferedImage[] leftIdle, rightIdle;
-    // FOR JUMPING STATE
-    BufferedImage[] leftJump, rightJump;
     // FOR RUNNING STATE
     BufferedImage[] leftRunning, rightRunning;
 
@@ -35,5 +40,9 @@ public class Entity {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public Entity(GamePanel gamePanel) {
+        this.gamePanel = gamePanel;
     }
 }
