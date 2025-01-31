@@ -42,6 +42,8 @@ public class Entity {
 
     // FOR IDLE STATE
     protected BufferedImage[] leftIdle, rightIdle;
+    // FOR ATTACK STATE
+    protected BufferedImage[] leftAttack, rightAttack;
     // FOR RUNNING STATE
     protected BufferedImage[] leftRunning, rightRunning;
 
