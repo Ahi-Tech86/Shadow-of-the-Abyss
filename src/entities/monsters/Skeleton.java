@@ -7,33 +7,33 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
-public class FlyingEye extends Entity {
+public class Skeleton extends Entity {
 
-    public FlyingEye(GamePanel gamePanel) {
+    public Skeleton(GamePanel gamePanel) {
         super(gamePanel);
         random = new Random();
 
-        speed = 3;
+        speed = 2;
         direction = "right";
         lastDirection = "right";
 
         // CHECKBOX SETUP
         solidArea = new Rectangle();
-        solidArea.x = 9;
-        solidArea.y = 24;
-        solidArea.width = 40;
-        solidArea.height = 25;
+        solidArea.x = 15;
+        solidArea.y = 15;
+        solidArea.width = 33;
+        solidArea.height = 48;
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
 
-        maxSpriteNumber = 8;
+        maxSpriteNumber = 4;
 
-        maxLife = 50;
-        maxStamina = 50;
+        maxLife = 75;
+        maxStamina = 75;
         currentLife = maxLife;
         currentStamina = maxStamina;
 
-        getFlyingEyeSprites();
+        getSkeletonSprites();
     }
 
     public void setAction() {
@@ -50,17 +50,19 @@ public class FlyingEye extends Entity {
 
             actionLockCounter = 0;
         }
+
+        System.out.println(collisionOn);
     }
 
-    private void getFlyingEyeSprites() {
+    private void getSkeletonSprites() {
         int k = 1;
 
-        leftRunning = new BufferedImage[8];
-        rightRunning = new BufferedImage[8];
+        leftRunning = new BufferedImage[4];
+        rightRunning = new BufferedImage[4];
 
-        for (int i = 0; i < 8; i++) {
-            leftRunning[i] = getSpriteImage("/monsters/FlyingEye/flight/flight_left" + k + ".png");
-            rightRunning[i] = getSpriteImage("/monsters/FlyingEye/flight/flight_right" + k + ".png");
+        for (int i = 0; i < 4; i++) {
+            leftRunning[i] = getSpriteImage("/monsters/Skeleton/walk/walk_left" + k + ".png");
+            rightRunning[i] = getSpriteImage("/monsters/Skeleton/walk/walk_right" + k + ".png");
 
             ++k;
         }

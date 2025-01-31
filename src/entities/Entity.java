@@ -34,8 +34,9 @@ public class Entity {
     public boolean collisionOn = false;
 
     // VARIABLES FOR CHANGING SPRITES
-    public int spriteCounter = 0;
     public int spriteNum = 1;
+    public int spriteCounter = 0;
+    public int maxSpriteNumber = 1;
 
     // VARIABLES FOR ACTION
     public int actionLockCounter = 0;
@@ -85,7 +86,7 @@ public class Entity {
             spriteCounter = 0;
             spriteNum++;
 
-            if (spriteNum > 8) {
+            if (spriteNum > maxSpriteNumber) {
                 spriteNum = 1;
             }
         }
