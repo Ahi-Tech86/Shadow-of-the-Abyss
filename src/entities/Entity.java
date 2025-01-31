@@ -20,6 +20,12 @@ public class Entity {
     public int worldX, worldY;
     public String lastDirection;
 
+    // STATUS
+    public int maxLife;
+    public int maxStamina;
+    public int currentLife;
+    public int currentStamina;
+
     // VARIABLE FOR CHECKBOX
     public Rectangle solidArea;
     public int solidAreaDefaultX, solidAreaDefaultY;
@@ -31,6 +37,7 @@ public class Entity {
     public int spriteCounter = 0;
     public int spriteNum = 1;
 
+    // VARIABLES FOR ACTION
     public int actionLockCounter = 0;
 
     // FOR IDLE STATE

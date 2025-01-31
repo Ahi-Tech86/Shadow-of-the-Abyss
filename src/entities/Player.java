@@ -55,6 +55,11 @@ public class Player extends Entity {
         worldY = gamePanel.tileSize * 10;
         speed = 4;
         direction = "idle";
+
+        maxLife = 100;
+        maxStamina = 100;
+        currentLife = maxLife;
+        currentStamina = maxStamina;
     }
 
     private void getPlayerSprites() {

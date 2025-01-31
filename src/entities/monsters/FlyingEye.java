@@ -26,6 +26,11 @@ public class FlyingEye extends Entity {
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
 
+        maxLife = 50;
+        maxStamina = 50;
+        currentLife = maxLife;
+        currentStamina = maxStamina;
+
         getFlyingEyeSprites();
     }
 

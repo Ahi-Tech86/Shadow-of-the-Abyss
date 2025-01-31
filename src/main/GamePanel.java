@@ -55,6 +55,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     // GAME STATES
     public int gameState;
+    public final int TITLE_STATE = 0;
     public final int PLAY_STATE = 1;
     public final int PAUSE_STATE = 2;
 
@@ -122,7 +123,7 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-    private void playMusic(int i) {
+    public void playMusic(int i) {
         music.setFile(i);
         music.playSound();
         music.loopSound();
@@ -140,9 +141,9 @@ public class GamePanel extends JPanel implements Runnable {
     public void setupGame() {
         assetSetter.setObject();
         assetSetter.setMonsters();
-        playMusic(0);
-        stopMusic();
-        gameState = PLAY_STATE;
+//        playMusic(0);
+//        stopMusic();
+        gameState = TITLE_STATE;
     }
 
     public void update() {
@@ -172,32 +173,38 @@ public class GamePanel extends JPanel implements Runnable {
             drawStart = System.nanoTime();
         }
 
-        // DRAWING BACKGROUND LAYERS
-        graphics2D.drawImage(backgroundLayer1, 0, 0, screenWidth, screenHeight, null);
-        graphics2D.drawImage(backgroundLayer2, 0, 0, screenWidth, screenHeight, null);
-        graphics2D.drawImage(backgroundLayer3, 0, 0, screenWidth, screenHeight, null);
-        graphics2D.drawImage(backgroundLayer4, 0, 0, screenWidth, screenHeight, null);
+        if (gameState == TITLE_STATE) {
+            userInterface.draw(graphics2D);
+        } else if (gameState == PLAY_STATE){
+            // DRAWING BACKGROUND LAYERS
+            graphics2D.drawImage(backgroundLayer1, 0, 0, screenWidth, screenHeight, null);
+            graphics2D.drawImage(backgroundLayer2, 0, 0, screenWidth, screenHeight, null);
+            graphics2D.drawImage(backgroundLayer3, 0, 0, screenWidth, screenHeight, null);
+            graphics2D.drawImage(backgroundLayer4, 0, 0, screenWidth, screenHeight, null);
 
-        // DRAWING TILES
-        tileManager.draw(graphics2D);
+            // DRAWING TILES
+            tileManager.draw(graphics2D);
 
-        // DRAWING OBJECTS
-        for (SuperObject object : objects) {
-            if (object != null) {
-                object.draw(graphics2D, this);;
+            // DRAWING OBJECTS
+            for (SuperObject object : objects) {
+                if (object != null) {
+                    object.draw(graphics2D, this);;
+                }
             }
-        }
 
-        // DRAWING MONSTERS
-        for (Entity monster : monsters) {
-            if (monster != null) {
-                monster.draw(graphics2D);
+            // DRAWING MONSTERS
+            for (Entity monster : monsters) {
+                if (monster != null) {
+                    monster.draw(graphics2D);
+                }
             }
+
+            player.draw(graphics2D);
+
+            userInterface.draw(graphics2D);
+        } else if (gameState == PAUSE_STATE) {
+            userInterface.draw(graphics2D);
         }
-
-        player.draw(graphics2D);
-
-        userInterface.draw(graphics2D);
 
         // END DRAW
         if (keyHandler.checkDrawTime) {
