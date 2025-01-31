@@ -4,6 +4,7 @@ import entities.Entity;
 import entities.Player;
 import objects.SuperObject;
 import tiles.TileManager;
+import tiles_animated.AnimatedTiles;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -51,6 +52,7 @@ public class GamePanel extends JPanel implements Runnable {
     // PLAYER AND OBJECTS
     public Entity[] monsters = new Entity[10];
     public SuperObject[] objects = new SuperObject[10];
+    public AnimatedTiles[] animatedTiles = new AnimatedTiles[5];
     public Player player = new Player(this, keyHandler);
 
     // GAME STATES
@@ -141,6 +143,7 @@ public class GamePanel extends JPanel implements Runnable {
     public void setupGame() {
         assetSetter.setObject();
         assetSetter.setMonsters();
+        assetSetter.setAnimatedTiles();
 //        playMusic(0);
 //        stopMusic();
         gameState = TITLE_STATE;
@@ -155,6 +158,13 @@ public class GamePanel extends JPanel implements Runnable {
             for (Entity monster : monsters) {
                 if (monster != null) {
                     monster.update();
+                }
+            }
+
+            // ANIMATED TILES
+            for (AnimatedTiles animeTile : animatedTiles) {
+                if (animeTile != null) {
+                    animeTile.update();
                 }
             }
 
@@ -184,6 +194,12 @@ public class GamePanel extends JPanel implements Runnable {
 
             // DRAWING TILES
             tileManager.draw(graphics2D);
+
+            for (AnimatedTiles animeTile : animatedTiles) {
+                if (animeTile != null) {
+                    animeTile.draw(graphics2D);
+                }
+            }
 
             // DRAWING OBJECTS
             for (SuperObject object : objects) {

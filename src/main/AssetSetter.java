@@ -3,6 +3,7 @@ package main;
 import entities.monsters.FlyingEye;
 import objects.CrystalObject;
 import objects.SkullObject;
+import tiles_animated.Portal;
 
 public class AssetSetter {
 
@@ -22,5 +23,19 @@ public class AssetSetter {
         gamePanel.monsters[0] = new FlyingEye(gamePanel);
         gamePanel.monsters[0].worldX = 9 * gamePanel.tileSize;
         gamePanel.monsters[0].worldY = 10 * gamePanel.tileSize;
+
+        gamePanel.monsters[1] = new FlyingEye(gamePanel);
+        gamePanel.monsters[1].worldX = 10 * gamePanel.tileSize;
+        gamePanel.monsters[1].worldY = 10 * gamePanel.tileSize;
+
+        gamePanel.monsters[2] = new FlyingEye(gamePanel);
+        gamePanel.monsters[2].worldX = 11 * gamePanel.tileSize;
+        gamePanel.monsters[2].worldY = 10 * gamePanel.tileSize;
+    }
+
+    public void setAnimatedTiles() {
+        gamePanel.animatedTiles[0] = new Portal(gamePanel, 0, 10);
+        gamePanel.animatedTiles[0].worldX = 0 * gamePanel.tileSize + 25;
+        gamePanel.animatedTiles[0].worldY = 10 * gamePanel.tileSize;
     }
 }

@@ -7,4 +7,6 @@ public class Tile {
     public Rectangle solidArea;
     public BufferedImage image;
     public boolean collision = false;
+
+    public void update() {}
 }
