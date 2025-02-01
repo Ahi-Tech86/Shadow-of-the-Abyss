@@ -22,26 +22,26 @@ public class SpriteSheet {
     }
 
     public static void main(String[] args) {
-        extractTileFromSprite();
+        sliceSpriteSheet();
     }
 
     private static void sliceSpriteSheet() {
         try {
-            SpriteSheet spriteSheet = new SpriteSheet("/monsters/Skeleton/Walk.png");
+            SpriteSheet spriteSheet = new SpriteSheet("/character/takeHit/originalAssets/Hurt.png");
 
-            int spriteWidth = 150;
+            int spriteWidth = 128;
             int spriteHeight = 64;
 
             BufferedImage sprite1 = spriteSheet.getSprite(0, 0, spriteWidth, spriteHeight);
-            BufferedImage sprite2 = spriteSheet.getSprite(150, 0, spriteWidth, spriteHeight);
-            BufferedImage sprite3 = spriteSheet.getSprite(300, 0, spriteWidth, spriteHeight);
-            BufferedImage sprite4 = spriteSheet.getSprite(450, 0, spriteWidth, spriteHeight);
+            BufferedImage sprite2 = spriteSheet.getSprite(128, 0, spriteWidth, spriteHeight);
+            BufferedImage sprite3 = spriteSheet.getSprite(0, 64, spriteWidth, spriteHeight);
+            BufferedImage sprite4 = spriteSheet.getSprite(128, 64, spriteWidth, spriteHeight);
 //            BufferedImage sprite5 = spriteSheet.getSprite(512, 0, spriteWidth, spriteHeight);
 //            BufferedImage sprite6 = spriteSheet.getSprite(640, 0, spriteWidth, spriteHeight);
 //            BufferedImage sprite7 = spriteSheet.getSprite(768, 0, spriteWidth, spriteHeight);
 //            BufferedImage sprite8 = spriteSheet.getSprite(896, 0, spriteWidth, spriteHeight);
 
-            String name = "walk_right";
+            String name = "take_hit_right";
 
             int i = 1;
 

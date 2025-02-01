@@ -13,7 +13,8 @@ public class FlyingEye extends Entity {
         super(gamePanel);
         random = new Random();
 
-        speed = 3;
+        type = 1;
+        speed = 2;
         direction = "right";
         lastDirection = "right";
 
@@ -26,7 +27,7 @@ public class FlyingEye extends Entity {
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
 
-        maxSpriteNumber = 8;
+        maxSpriteNumbers = 8;
 
         maxLife = 50;
         maxStamina = 50;

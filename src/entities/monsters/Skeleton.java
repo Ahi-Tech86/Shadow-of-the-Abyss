@@ -13,7 +13,8 @@ public class Skeleton extends Entity {
         super(gamePanel);
         random = new Random();
 
-        speed = 2;
+        type = 1;
+        speed = 1;
         direction = "right";
         lastDirection = "right";
 
@@ -26,7 +27,7 @@ public class Skeleton extends Entity {
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
 
-        maxSpriteNumber = 4;
+        maxSpriteNumbers = 4;
 
         maxLife = 75;
         maxStamina = 75;
@@ -50,8 +51,6 @@ public class Skeleton extends Entity {
 
             actionLockCounter = 0;
         }
-
-        System.out.println(collisionOn);
     }
 
     private void getSkeletonSprites() {

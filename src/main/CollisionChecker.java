@@ -167,7 +167,9 @@ public class CollisionChecker {
     }
 
     // FOR MONSTERS
-    public void checkPlayer(Entity entity) {
+    public boolean checkPlayer(Entity entity) {
+        boolean contactPlayer = false;
+
         // Get entity's solid area position
         entity.solidArea.x = entity.worldX + entity.solidArea.x;
         entity.solidArea.y = entity.worldY + entity.solidArea.y;
@@ -181,12 +183,14 @@ public class CollisionChecker {
                 entity.solidArea.x += entity.speed;
                 if (entity.solidArea.intersects(gamePanel.player.solidArea)) {
                     entity.collisionOn = true;
+                    contactPlayer = true;
                 }
                 break;
             case "left":
                 entity.solidArea.x -= entity.speed;
                 if (entity.solidArea.intersects(gamePanel.player.solidArea)) {
                     entity.collisionOn = true;
+                    contactPlayer = true;
                 }
                 break;
         }
@@ -195,6 +199,8 @@ public class CollisionChecker {
         entity.solidArea.y = entity.solidAreaDefaultY;
         gamePanel.player.solidArea.x = gamePanel.player.solidAreaDefaultX;
         gamePanel.player.solidArea.y = gamePanel.player.solidAreaDefaultY;
+
+        return contactPlayer;
     }
 
     private boolean checkBottomCollision(Entity entity, int yOffset) {

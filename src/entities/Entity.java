@@ -33,13 +33,21 @@ public class Entity {
     // VARIABLE FOR CHECKING SIDES COLLISION
     public boolean collisionOn = false;
 
+    // VARIABLES FOR ACTION
+    public int actionLockCounter = 0;
+
+    // VARIABLES FOR DAMAGE
+    public boolean isInvincible = false;
+    public int invincibleCounter = 0;
+
+    // 0 - player
+    // 1 - monster
+    public int type;
+
     // VARIABLES FOR CHANGING SPRITES
     public int spriteNum = 1;
     public int spriteCounter = 0;
-    public int maxSpriteNumber = 1;
-
-    // VARIABLES FOR ACTION
-    public int actionLockCounter = 0;
+    public int maxSpriteNumbers = 1;
 
     // FOR IDLE STATE
     protected BufferedImage[] leftIdle, rightIdle;
@@ -47,6 +55,8 @@ public class Entity {
     protected BufferedImage[] leftAttack, rightAttack;
     // FOR RUNNING STATE
     protected BufferedImage[] leftRunning, rightRunning;
+    // FOR TAKE HIT STATE
+    protected BufferedImage[] leftTakeHit, rightTakeHit;
 
     public Entity(GamePanel gamePanel) {
         this.gamePanel = gamePanel;
@@ -67,8 +77,16 @@ public class Entity {
 
         collisionOn = false;
         gamePanel.collisionChecker.checkTile(this);
-        gamePanel.collisionChecker.checkPlayer(this);
         gamePanel.collisionChecker.checkObject(this, false);
+
+        boolean contactPlayer = gamePanel.collisionChecker.checkPlayer(this);
+        if (this.type == 1 && contactPlayer) {
+            if (!gamePanel.player.isInvincible) {
+                gamePanel.player.currentLife -= 10;
+                gamePanel.player.isInvincible = true;
+            }
+        }
+
 
         if (!collisionOn) {
             switch (direction) {
@@ -86,7 +104,7 @@ public class Entity {
             spriteCounter = 0;
             spriteNum++;
 
-            if (spriteNum > maxSpriteNumber) {
+            if (spriteNum > maxSpriteNumbers) {
                 spriteNum = 1;
             }
         }

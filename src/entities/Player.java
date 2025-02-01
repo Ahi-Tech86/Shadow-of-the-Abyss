@@ -70,7 +70,9 @@ public class Player extends Entity {
         rightIdle = new BufferedImage[8];
         leftJump = new BufferedImage[8];
         rightJump = new BufferedImage[8];
+        leftTakeHit = new BufferedImage[3];
         leftRunning = new BufferedImage[8];
+        rightTakeHit = new BufferedImage[3];
         rightRunning = new BufferedImage[8];
 
         for (int i = 0; i < 8; i++) {
@@ -80,6 +82,11 @@ public class Player extends Entity {
             rightRunning[i] = getSpriteImage("/character/running/right" + k + ".png");
             leftJump[i] = getSpriteImage("/character/jumping/jump_left" + k + ".png");
             rightJump[i] = getSpriteImage("/character/jumping/jump_right" + k + ".png");
+
+            if (k < 4) {
+                leftTakeHit[i] = getSpriteImage("/character/takeHit/take_hit_left" + k + ".png");
+                rightTakeHit[i] = getSpriteImage("/character/takeHit/take_hit_right" + k + ".png");
+            }
 
             if (k < 7) {
                 climb[i] = getSpriteImage("/character/climbing/climb" + k + ".png");
@@ -106,9 +113,7 @@ public class Player extends Entity {
 
             // CHECK MONSTER COLLISION
             int monsterIndex = gamePanel.collisionChecker.checkEntity(this, gamePanel.monsters);
-            if (monsterIndex != 999) {
-                collisionOn = true;
-            }
+            contactWithMonster(monsterIndex);
 
             // IF COLLISION IS FALSE, PLAYER CAN MOVE
             if (!collisionOn) {
@@ -162,6 +167,10 @@ public class Player extends Entity {
         // SPRITES CHANGING
         spriteCounter++;
         if (isClimbing) {
+            if (spriteNum > 6) {
+                spriteNum = 1;
+            }
+
             if (spriteCounter > 10) {
                 spriteCounter = 0;
                 spriteNum++;
@@ -171,16 +180,52 @@ public class Player extends Entity {
                 }
             }
         } else {
-            if (spriteCounter > 5) {
-                spriteCounter = 0;
-                spriteNum++;
 
-                if (spriteNum > 8) {
+            if (isInvincible) {
+                if (spriteNum > 3) {
                     spriteNum = 1;
+                }
+
+                if (spriteCounter > 10) {
+                    spriteCounter = 0;
+                    spriteNum++;
+
+                    if (spriteNum > 3) {
+                        spriteNum = 1;
+                    }
+                }
+            } else {
+                if (spriteCounter > 5) {
+                    spriteCounter = 0;
+                    spriteNum++;
+
+                    if (spriteNum > 8) {
+                        spriteNum = 1;
+                    }
                 }
             }
         }
 
+        if (isInvincible) {
+            invincibleCounter++;
+
+            if (invincibleCounter == 30) {
+                isInvincible = false;
+                invincibleCounter = 0;
+            }
+        }
+    }
+
+    private void contactWithMonster(int monsterIndex) {
+        if (monsterIndex != 999) {
+            collisionOn = true;
+
+            if (!isInvincible) {
+                currentLife -= 10;
+                isInvincible = true;
+            }
+
+        }
     }
 
     private void pickUpObject(int objectIndex) {
@@ -208,6 +253,10 @@ public class Player extends Entity {
 
         if (isJumping) {
             return lastDirection.equals("right") ? rightJump[spriteNum - 1] : leftJump[spriteNum - 1];
+        }
+
+        if (isInvincible) {
+            return lastDirection.equals("right") ? rightTakeHit[spriteNum - 1] : leftTakeHit[spriteNum - 1];
         }
 
         switch (direction) {
