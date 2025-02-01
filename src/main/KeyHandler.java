@@ -7,7 +7,7 @@ public class KeyHandler implements KeyListener {
 
     GamePanel gamePanel;
 
-    public boolean leftPressed, rightPressed, spacePressed, fPressed;
+    public boolean leftPressed, rightPressed, spacePressed, fPressed, ePressed;
 
     // DEBUG
     public boolean checkDrawTime;
@@ -42,7 +42,7 @@ public class KeyHandler implements KeyListener {
             if (code == KeyEvent.VK_ENTER) {
                 if (gamePanel.userInterface.commandNum == 1) {
                     gamePanel.gameState = gamePanel.PLAY_STATE;
-//                    gamePanel.playMusic(0);
+                    //gamePanel.playMusic(0);
                 } else if (gamePanel.userInterface.commandNum == 2) {
                     // later
                 } else if (gamePanel.userInterface.commandNum == 3) {
@@ -65,25 +65,16 @@ public class KeyHandler implements KeyListener {
             if (code == KeyEvent.VK_F) {
                 fPressed = true;
             }
+            if (code == KeyEvent.VK_E) {
+                ePressed = true;
+            }
             if (code == KeyEvent.VK_P) {
-                if (gamePanel.gameState == gamePanel.PLAY_STATE) {
-                    gamePanel.gameState = gamePanel.PAUSE_STATE;
-                }
-//                else if (gamePanel.gameState == gamePanel.PAUSE_STATE) {
-//                    gamePanel.gameState = gamePanel.PLAY_STATE;
-//                }
+                gamePanel.gameState = gamePanel.PAUSE_STATE;
             }
             if (code == KeyEvent.VK_T) {
                 checkDrawTime = !checkDrawTime;
             }
         }
-
-        // PAUSE STATE
-//        if (gamePanel.gameState == gamePanel.PAUSE_STATE) {
-//            if (code == KeyEvent.VK_P) {
-//                gamePanel.gameState = gamePanel.PLAY_STATE;
-//            }
-//        }
     }
 
     @Override
@@ -98,6 +89,9 @@ public class KeyHandler implements KeyListener {
         }
         if (code == KeyEvent.VK_SPACE) {
             spacePressed = false;
+        }
+        if (code == KeyEvent.VK_E) {
+            ePressed = false;
         }
         if (code == KeyEvent.VK_F) {
             fPressed = false;

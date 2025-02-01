@@ -12,7 +12,7 @@ public class Entity {
 
     // SYSTEM
     GamePanel gamePanel;
-    public Random random;
+    protected Random random;
 
     // VARIABLES
     public int speed;
@@ -25,6 +25,7 @@ public class Entity {
     public int maxStamina;
     public int currentLife;
     public int currentStamina;
+    public int restoreStaminaCounter;
 
     // VARIABLE FOR CHECKBOX
     public Rectangle solidArea;
@@ -39,6 +40,16 @@ public class Entity {
     // VARIABLES FOR DAMAGE
     public boolean isInvincible = false;
     public int invincibleCounter = 0;
+
+    // VARIABLES FOR ATTACK
+    protected int attackType = 1;
+    protected int attackSpriteNum = 1;
+    protected int attackSpriteCounter = 0;
+    protected boolean isAttacking = false;
+
+    public Rectangle leftAttackArea = new Rectangle(0, 0, 0, 0);
+    public Rectangle rightAttackArea = new Rectangle(0, 0, 0, 0);
+    public Rectangle currentAttackArea = new Rectangle(0, 0, 0, 0);
 
     // 0 - player
     // 1 - monster
@@ -106,6 +117,15 @@ public class Entity {
 
             if (spriteNum > maxSpriteNumbers) {
                 spriteNum = 1;
+            }
+        }
+
+        if (isInvincible) {
+            invincibleCounter++;
+
+            if (invincibleCounter == 30) {
+                isInvincible = false;
+                invincibleCounter = 0;
             }
         }
     }

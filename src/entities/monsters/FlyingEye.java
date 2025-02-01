@@ -51,6 +51,8 @@ public class FlyingEye extends Entity {
 
             actionLockCounter = 0;
         }
+
+        System.out.println(currentLife);
     }
 
     private void getFlyingEyeSprites() {

@@ -26,6 +26,9 @@ public class Player extends Entity {
     // SPRITE ARRAYS
     BufferedImage[] climb;
     BufferedImage[] leftJump, rightJump;
+    BufferedImage[] currentAttackFrames;
+    BufferedImage[] leftAttackType1, leftAttackType2, leftAttackType3;
+    BufferedImage[] rightAttackType1, rightAttackType2, rightAttackType3;
 
     public Player(GamePanel gamePanel, KeyHandler keyHandler) {
         super(gamePanel);
@@ -44,6 +47,19 @@ public class Player extends Entity {
         solidArea.width = 18;
         solidArea.height = 46;
 
+        // RIGHT ATTACK AREA BOX
+        rightAttackArea = new Rectangle();
+        rightAttackArea.x = 80;
+        rightAttackArea.y = 22;
+        rightAttackArea.width = 27;
+        rightAttackArea.height = 31;
+        // LEFT ATTACK AREA BOX
+        leftAttackArea = new Rectangle();
+        leftAttackArea.x = 20;
+        leftAttackArea.y = 22;
+        leftAttackArea.width = 32;
+        leftAttackArea.height = 31;
+
         lastDirection = "right";
 
         setDefaultVariables();
@@ -60,45 +76,49 @@ public class Player extends Entity {
         maxStamina = 100;
         currentLife = maxLife;
         currentStamina = maxStamina;
+        restoreStaminaCounter = 0;
     }
 
     private void getPlayerSprites() {
-        int  k = 1;
+        byte IDLE_FRAMES = 8;
+        byte CLIMB_FRAMES = 6;
+        byte RUNNING_FRAMES = 8;
+        byte JUMPING_FRAMES = 8;
+        byte TAKE_HIT_FRAMES = 3;
+        byte ATTACK_TYPE1_FRAMES = 9;
+        byte ATTACK_TYPE2_FRAMES = 5;
+        byte ATTACK_TYPE3_FRAMES = 6;
 
-        climb = new BufferedImage[6];
-        leftIdle = new BufferedImage[8];
-        rightIdle = new BufferedImage[8];
-        leftJump = new BufferedImage[8];
-        rightJump = new BufferedImage[8];
-        leftTakeHit = new BufferedImage[3];
-        leftRunning = new BufferedImage[8];
-        rightTakeHit = new BufferedImage[3];
-        rightRunning = new BufferedImage[8];
+        climb = loadSprites("/character/climbing/climb", CLIMB_FRAMES);
+        leftIdle = loadSprites("/character/idle/idle_left", IDLE_FRAMES);
+        rightIdle = loadSprites("/character/idle/idle_right", IDLE_FRAMES);
+        leftRunning = loadSprites("/character/running/left", RUNNING_FRAMES);
+        rightRunning = loadSprites("/character/running/right", RUNNING_FRAMES);
+        leftJump = loadSprites("/character/jumping/jump_left", JUMPING_FRAMES);
+        rightJump = loadSprites("/character/jumping/jump_right", JUMPING_FRAMES);
+        leftTakeHit = loadSprites("/character/takeHit/take_hit_left", TAKE_HIT_FRAMES);
+        rightTakeHit = loadSprites("/character/takeHit/take_hit_right", TAKE_HIT_FRAMES);
+        leftAttackType1 = loadSprites("/character/attack/type1/attack_type_1_left", ATTACK_TYPE1_FRAMES);
+        rightAttackType1 = loadSprites("/character/attack/type1/attack_type_1_right", ATTACK_TYPE1_FRAMES);
+        leftAttackType2 = loadSprites("/character/attack/type2/attack_type_2_left", ATTACK_TYPE2_FRAMES);
+        rightAttackType2 = loadSprites("/character/attack/type2/attack_type_2_right", ATTACK_TYPE2_FRAMES);
+        leftAttackType3 = loadSprites("/character/attack/type3/attack_type_3_left", ATTACK_TYPE3_FRAMES);
+        rightAttackType3 = loadSprites("/character/attack/type3/attack_type_3_right", ATTACK_TYPE3_FRAMES);
+    }
 
-        for (int i = 0; i < 8; i++) {
-            leftIdle[i] = getSpriteImage("/character/idle/idle_left" + k + ".png");
-            rightIdle[i] = getSpriteImage("/character/idle/idle_right" + k + ".png");
-            leftRunning[i] = getSpriteImage("/character/running/left" + k + ".png");
-            rightRunning[i] = getSpriteImage("/character/running/right" + k + ".png");
-            leftJump[i] = getSpriteImage("/character/jumping/jump_left" + k + ".png");
-            rightJump[i] = getSpriteImage("/character/jumping/jump_right" + k + ".png");
+    private BufferedImage[] loadSprites(String pathPrefix, byte frameCount) {
+        BufferedImage[] sprites = new BufferedImage[frameCount];
 
-            if (k < 4) {
-                leftTakeHit[i] = getSpriteImage("/character/takeHit/take_hit_left" + k + ".png");
-                rightTakeHit[i] = getSpriteImage("/character/takeHit/take_hit_right" + k + ".png");
-            }
-
-            if (k < 7) {
-                climb[i] = getSpriteImage("/character/climbing/climb" + k + ".png");
-            }
-
-            ++k;
+        for (int i = 0; i < frameCount; i++) {
+            sprites[i] = getSpriteImage(pathPrefix + (i + 1) + ".png");
         }
+
+        return sprites;
     }
 
     public void update() {
         // HORIZONTAL MOVING
-        if (keyHandler.leftPressed || keyHandler.rightPressed) {
+        if ((keyHandler.leftPressed || keyHandler.rightPressed) && !isAttacking) {
             // KEYS HANDLE
             direction = keyHandler.rightPressed ? "right" : "left";
             lastDirection = direction;
@@ -127,6 +147,9 @@ public class Player extends Entity {
                 }
             }
 
+        } else if (keyHandler.ePressed || isAttacking) {
+            attacking();
+            gamePanel.collisionChecker.checkAttackAreaIntersectWithMonster(this, gamePanel.monsters);
         } else {
             direction = "idle";
         }
@@ -161,6 +184,15 @@ public class Player extends Entity {
                 isJumping = false;
                 velocity_Y = 0;
                 worldY = gamePanel.collisionChecker.getGroundY(this) * gamePanel.tileSize;
+            }
+        }
+
+        if (currentStamina < maxStamina && !isAttacking) {
+            restoreStaminaCounter++;
+
+            if (restoreStaminaCounter > 10) {
+                currentStamina += 1;
+                restoreStaminaCounter = 0;
             }
         }
 
@@ -216,6 +248,104 @@ public class Player extends Entity {
         }
     }
 
+    private void attacking() {
+        startAttack();
+
+        attackSpriteCounter++;
+        if (attackSpriteCounter > 4) {
+            attackSpriteCounter = 0;
+            attackSpriteNum++;
+            if (currentStamina > 5) {
+                currentStamina -= 5;
+            }
+
+            // Save the current worldX, worldY, solidArea
+            int currentWorldX = worldX;
+            int currentWorldY = worldY;
+            int solidAreaWidth = solidArea.width;
+            int solidAreaHeight = solidArea.height;
+
+            // Adjust player's worldX and worldY for the attackArea
+            switch (lastDirection) {
+                case "right":
+                    currentAttackArea = rightAttackArea;
+                    worldX += currentAttackArea.width;
+                    break;
+                case "left":
+                    currentAttackArea = leftAttackArea;
+                    worldX -= currentAttackArea.width;
+            }
+
+            // AttackArea becomes solidArea
+            solidArea.width = currentAttackArea.width;
+            solidArea.height = currentAttackArea.height;
+
+            // Check monster collision with the updated worldX, worldY and AttackArea
+            int monsterIndex = gamePanel.collisionChecker.checkEntity(this, gamePanel.monsters);
+            damageMonster(monsterIndex);
+
+            // After checking collision, restore the original values
+            worldX = currentWorldX;
+            worldY = currentWorldY;
+            solidArea.width = solidAreaWidth;
+            solidArea.height = solidAreaHeight;
+
+            if (attackSpriteNum > currentAttackFrames.length) {
+                attackSpriteNum = 1;
+                isAttacking = false;
+            }
+        }
+    }
+
+    private void startAttack() {
+        if (!isAttacking && currentStamina > 10) {
+            attackType = (int) (Math.random() * 3) + 1;
+
+            switch (attackType) {
+                case 1:
+                    if (lastDirection.equals("right")) {
+                        currentAttackArea = rightAttackArea;
+                        currentAttackFrames = rightAttackType1;
+                    } else if (lastDirection.equals("left")) {
+                        currentAttackFrames = leftAttackType1;
+                        currentAttackArea = leftAttackArea;
+                    } else {
+                        currentAttackFrames = null;
+                    }
+                    break;
+                case 2:
+                    if (lastDirection.equals("right")) {
+                        currentAttackArea = rightAttackArea;
+                        currentAttackFrames = rightAttackType2;
+                    } else if (lastDirection.equals("left")) {
+                        currentAttackFrames = leftAttackType2;
+                        currentAttackArea = leftAttackArea;
+                    } else {
+                        currentAttackFrames = null;
+                    }
+                    break;
+                case 3:
+                    if (lastDirection.equals("right")) {
+                        currentAttackArea = rightAttackArea;
+                        currentAttackFrames = rightAttackType3;
+                    } else if (lastDirection.equals("left")) {
+                        currentAttackArea = leftAttackArea;
+                        currentAttackFrames = leftAttackType3;
+                    } else {
+                        currentAttackFrames = null;
+                    }
+                    break;
+                default:
+                    currentAttackFrames = null;
+                    break;
+            }
+
+            isAttacking = true;
+            attackSpriteNum = 1;
+            attackSpriteCounter = 0;
+        }
+    }
+
     private void contactWithMonster(int monsterIndex) {
         if (monsterIndex != 999) {
             collisionOn = true;
@@ -225,6 +355,19 @@ public class Player extends Entity {
                 isInvincible = true;
             }
 
+        }
+    }
+
+    private void damageMonster(int monsterIndex) {
+        if (monsterIndex != 999) {
+            if (!gamePanel.monsters[monsterIndex].isInvincible) {
+                gamePanel.monsters[monsterIndex].currentLife -= 15;
+                gamePanel.monsters[monsterIndex].isInvincible = true;
+
+                if (gamePanel.monsters[monsterIndex].currentLife <= 0) {
+                    gamePanel.monsters[monsterIndex] = null;
+                }
+            }
         }
     }
 
@@ -247,6 +390,11 @@ public class Player extends Entity {
     }
 
     private BufferedImage getCurrentSprite() {
+
+        if (isAttacking) {
+            return currentAttackFrames[attackSpriteNum - 1];
+        }
+
         if (isClimbing) {
             return climb[spriteNum - 1];
         }
@@ -274,6 +422,8 @@ public class Player extends Entity {
     private void drawHitbox(Graphics2D graphics2D) {
         Composite originalComposite = graphics2D.getComposite();
         graphics2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.9f));
+
+        // DRAWING HITBOX
         graphics2D.setColor(Color.RED);
         graphics2D.drawRect(
                 this.screenX + this.solidArea.x,
@@ -282,8 +432,30 @@ public class Player extends Entity {
                 this.solidArea.height
         );
 
+        // DRAWING SPRITE SIZE
         graphics2D.setColor(Color.GREEN);
         graphics2D.drawRect(screenX, screenY, 128, 64);
+
+        // DRAWING ATTACK HITBOX
+        graphics2D.setColor(Color.CYAN);
+        graphics2D.drawRect(
+                screenX + this.currentAttackArea.x,
+                screenY + this.currentAttackArea.y,
+                currentAttackArea.width,
+                currentAttackArea.height
+        );
+//        graphics2D.drawRect(
+//                screenX + this.rightAttackArea.x,
+//                screenY + this.rightAttackArea.y,
+//                rightAttackArea.width,
+//                rightAttackArea.height
+//        );
+//        graphics2D.drawRect(
+//                screenX + this.leftAttackArea.x,
+//                screenY + this.leftAttackArea.y,
+//                leftAttackArea.width,
+//                leftAttackArea.height
+//        );
         graphics2D.setComposite(originalComposite);
     }
 }

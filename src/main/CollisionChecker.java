@@ -166,6 +166,38 @@ public class CollisionChecker {
         return index;
     }
 
+    public void checkAttackAreaIntersectWithMonster(Entity entity, Entity[] target) {
+        for (int i = 0; i < target.length; i++) {
+            if (target[i] != null) {
+                // Get entity's solid area position
+                entity.currentAttackArea.x = entity.worldX + entity.currentAttackArea.x;
+                entity.currentAttackArea.y = entity.worldY + entity.currentAttackArea.y;
+
+                // Get object's solid area position
+                target[i].solidArea.x = target[i].worldX + target[i].solidArea.x;
+                target[i].solidArea.y = target[i].worldY + target[i].solidArea.y;
+
+                switch (entity.lastDirection) {
+                    case "right":
+                        if (entity.currentAttackArea.intersects(target[i].solidArea)) {
+                            target[i].currentLife -= 10;
+                        }
+                        break;
+                    case "left":
+                        if (entity.currentAttackArea.intersects(target[i].solidArea)) {
+                            target[i].currentLife -= 10;
+                        }
+                        break;
+                }
+
+                entity.solidArea.x = entity.solidAreaDefaultX;
+                entity.solidArea.y = entity.solidAreaDefaultY;
+                target[i].solidArea.x = target[i].solidAreaDefaultX;
+                target[i].solidArea.y = target[i].solidAreaDefaultY;
+            }
+        }
+    }
+
     // FOR MONSTERS
     public boolean checkPlayer(Entity entity) {
         boolean contactPlayer = false;
