@@ -47,6 +47,10 @@ public class Entity {
     protected int attackSpriteCounter = 0;
     protected boolean isAttacking = false;
 
+    // VARIABLES FOR HP BAR
+    boolean hpBarOn = false;
+    int hpBarCounter = 0;
+
     // VARIABLES FOR DYING STATE
     public boolean isAlive = true;
     public boolean isDying = false;
@@ -142,6 +146,14 @@ public class Entity {
                             break;
                     }
                 }
+            } else {
+                hpBarOn = true;
+                hpBarCounter++;
+
+                if (hpBarCounter > 600) {
+                    hpBarCounter = 0;
+                    hpBarOn = false;
+                }
             }
         }
 
@@ -218,6 +230,17 @@ public class Entity {
                             break;
                     }
                 }
+            }
+
+            if (type == 1 && hpBarOn) {
+                double oneScale = (double) gamePanel.tileSize / maxLife;
+                double hpBarValue = oneScale * currentLife;
+
+                graphics2D.setColor(new Color(0, 0, 0));
+                graphics2D.fillRect(screenX - 1, screenY - 6, gamePanel.tileSize + 1, 7);
+
+                graphics2D.setColor(new Color(141, 0, 0));
+                graphics2D.fillRect(screenX, screenY - 5, (int) hpBarValue, 5);
             }
 
             graphics2D.drawImage(image, screenX, screenY, gamePanel.tileSize, gamePanel.tileSize, null);
