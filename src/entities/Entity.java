@@ -47,6 +47,13 @@ public class Entity {
     protected int attackSpriteCounter = 0;
     protected boolean isAttacking = false;
 
+    // VARIABLES FOR DYING STATE
+    public boolean isAlive = true;
+    public boolean isDying = false;
+    public int dyingCounter = 0;
+    public int dyingSpriteNum = 1;
+    public byte maxSpriteNumbersForDeath = 1;
+
     public Rectangle leftAttackArea = new Rectangle(0, 0, 0, 0);
     public Rectangle rightAttackArea = new Rectangle(0, 0, 0, 0);
     public Rectangle currentAttackArea = new Rectangle(0, 0, 0, 0);
@@ -59,9 +66,12 @@ public class Entity {
     public int spriteNum = 1;
     public int spriteCounter = 0;
     public int maxSpriteNumbers = 1;
+    public int maxSpriteNumbersForTakingHit = 4;
 
     // FOR IDLE STATE
     protected BufferedImage[] leftIdle, rightIdle;
+    // FOR DEATH STATE
+    protected BufferedImage[] leftDeath, rightDeath;
     // FOR ATTACK STATE
     protected BufferedImage[] leftAttack, rightAttack;
     // FOR RUNNING STATE
@@ -81,42 +91,79 @@ public class Entity {
         }
     }
 
+    protected BufferedImage[] loadSprites(String pathPrefix, byte frameCount) {
+        BufferedImage[] sprites = new BufferedImage[frameCount];
+
+        for (int i = 0; i < frameCount; i++) {
+            sprites[i] = getSpriteImage(pathPrefix + (i + 1) + ".png");
+        }
+
+        return sprites;
+    }
+
     public void setAction() {}
 
     public void update() {
-        setAction();
+        if (isDying) {
+            dyingCounter++;
+            if (dyingCounter > 15) {
+                dyingCounter = 0;
+                dyingSpriteNum++;
 
-        collisionOn = false;
-        gamePanel.collisionChecker.checkTile(this);
-        gamePanel.collisionChecker.checkObject(this, false);
+                if (dyingSpriteNum > maxSpriteNumbersForDeath) {
+                    isAlive = false;
+                    dyingSpriteNum = 4;
+                }
+            }
 
-        boolean contactPlayer = gamePanel.collisionChecker.checkPlayer(this);
-        if (this.type == 1 && contactPlayer) {
-            if (!gamePanel.player.isInvincible) {
-                gamePanel.player.currentLife -= 10;
-                gamePanel.player.isInvincible = true;
+        } else {
+            if (!isInvincible) {
+                setAction();
+
+                collisionOn = false;
+                gamePanel.collisionChecker.checkTile(this);
+                gamePanel.collisionChecker.checkObject(this, false);
+
+                boolean contactPlayer = gamePanel.collisionChecker.checkPlayer(this);
+                if (this.type == 1 && contactPlayer) {
+                    if (!gamePanel.player.isInvincible) {
+                        gamePanel.player.currentLife -= 10;
+                        gamePanel.player.isInvincible = true;
+                    }
+                }
+
+                if (!collisionOn) {
+                    switch (direction) {
+                        case "right":
+                            worldX += speed;
+                            break;
+                        case "left":
+                            worldX -= speed;
+                            break;
+                    }
+                }
             }
         }
 
-
-        if (!collisionOn) {
-            switch (direction) {
-                case "right":
-                    worldX += speed;
-                    break;
-                case "left":
-                    worldX -= speed;
-                    break;
-            }
-        }
 
         spriteCounter++;
-        if (spriteCounter > 5) {
-            spriteCounter = 0;
-            spriteNum++;
+        if (!isInvincible) {
+            if (spriteCounter > 5) {
+                spriteCounter = 0;
+                spriteNum++;
 
-            if (spriteNum > maxSpriteNumbers) {
-                spriteNum = 1;
+                if (spriteNum > maxSpriteNumbers) {
+                    spriteNum = 1;
+                }
+            }
+        } else {
+            if (spriteCounter > 5) {
+                spriteCounter = 0;
+                spriteNum++;
+
+                if (spriteNum > maxSpriteNumbersForTakingHit) {
+                    spriteNum = 1;
+                }
             }
         }
 
@@ -142,13 +189,35 @@ public class Entity {
                 worldY + gamePanel.tileSize > gamePanel.player.worldY - gamePanel.player.screenY &&
                 worldY - gamePanel.tileSize < gamePanel.player.worldY + gamePanel.player.screenY
         ) {
-            switch (direction) {
-                case "right":
-                    image = rightRunning[spriteNum - 1];
-                    break;
-                case "left":
-                    image = leftRunning[spriteNum - 1];
-                    break;
+            if (isDying) {
+                switch (lastDirection) {
+                    case "right":
+                        image = rightDeath[dyingSpriteNum - 1];
+                        break;
+                    case "left":
+                        image = leftDeath[dyingSpriteNum - 1];
+                        break;
+                }
+
+            } else {
+                if (isInvincible) {
+                    switch (lastDirection) {
+                        case "right":
+                            image = rightTakeHit[spriteNum - 1];
+                            break;
+                        case "left":
+                            image = leftTakeHit[spriteNum - 1];
+                    }
+                } else {
+                    switch (direction) {
+                        case "right":
+                            image = rightRunning[spriteNum - 1];
+                            break;
+                        case "left":
+                            image = leftRunning[spriteNum - 1];
+                            break;
+                    }
+                }
             }
 
             graphics2D.drawImage(image, screenX, screenY, gamePanel.tileSize, gamePanel.tileSize, null);

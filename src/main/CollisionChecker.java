@@ -1,7 +1,6 @@
 package main;
 
 import entities.Entity;
-import entities.Player;
 import tiles.Ladder;
 
 import java.awt.*;
@@ -196,6 +195,36 @@ public class CollisionChecker {
                 target[i].solidArea.y = target[i].solidAreaDefaultY;
             }
         }
+    }
+
+    public boolean checkAttackAreaIntersectWithMonsters(Entity entity, Entity[] target) {
+        for (int i = 0; i < target.length; i++) {
+            if (target[i] != null) {
+                // Get entity's attack area position
+                entity.currentAttackArea.x = entity.worldX + entity.currentAttackArea.x;
+                entity.currentAttackArea.y = entity.worldY + entity.currentAttackArea.y;
+
+                // Get monster's solid area position
+                target[i].solidArea.x = target[i].worldX + target[i].solidArea.x;
+                target[i].solidArea.y = target[i].worldY + target[i].solidArea.y;
+
+                if (entity.currentAttackArea.intersects(target[i].solidArea)) {
+                    // Reset positions
+                    entity.currentAttackArea.x = entity.solidAreaDefaultX;
+                    entity.currentAttackArea.y = entity.solidAreaDefaultY;
+                    target[i].solidArea.x = target[i].solidAreaDefaultX;
+                    target[i].solidArea.y = target[i].solidAreaDefaultY;
+                    return true;
+                }
+
+                // Reset positions
+                entity.currentAttackArea.x = entity.solidAreaDefaultX;
+                entity.currentAttackArea.y = entity.solidAreaDefaultY;
+                target[i].solidArea.x = target[i].solidAreaDefaultX;
+                target[i].solidArea.y = target[i].solidAreaDefaultY;
+            }
+        }
+        return false;
     }
 
     // FOR MONSTERS

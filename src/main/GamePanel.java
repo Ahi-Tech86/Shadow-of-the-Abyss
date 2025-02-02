@@ -11,6 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Objects;
 
 public class GamePanel extends JPanel implements Runnable {
@@ -153,9 +154,13 @@ public class GamePanel extends JPanel implements Runnable {
             player.update();
 
             // MONSTERS
-            for (Entity monster : monsters) {
-                if (monster != null) {
-                    monster.update();
+            for (int i = 0; i < monsters.length; i++) {
+                if (monsters[i] != null) {
+                    if (monsters[i].isAlive) {
+                        monsters[i].update();
+                    } else {
+                        monsters[i] = null;
+                    }
                 }
             }
 

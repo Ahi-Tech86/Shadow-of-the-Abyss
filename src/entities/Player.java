@@ -106,16 +106,6 @@ public class Player extends Entity {
         rightAttackType3 = loadSprites("/character/attack/type3/attack_type_3_right", ATTACK_TYPE3_FRAMES);
     }
 
-    private BufferedImage[] loadSprites(String pathPrefix, byte frameCount) {
-        BufferedImage[] sprites = new BufferedImage[frameCount];
-
-        for (int i = 0; i < frameCount; i++) {
-            sprites[i] = getSpriteImage(pathPrefix + (i + 1) + ".png");
-        }
-
-        return sprites;
-    }
-
     public void update() {
         // HORIZONTAL MOVING
         if ((keyHandler.leftPressed || keyHandler.rightPressed) && !isAttacking) {
@@ -149,7 +139,7 @@ public class Player extends Entity {
 
         } else if (keyHandler.ePressed || isAttacking) {
             attacking();
-            gamePanel.collisionChecker.checkAttackAreaIntersectWithMonster(this, gamePanel.monsters);
+            //gamePanel.collisionChecker.checkAttackAreaIntersectWithMonster(this, gamePanel.monsters);
         } else {
             direction = "idle";
         }
@@ -190,7 +180,7 @@ public class Player extends Entity {
         if (currentStamina < maxStamina && !isAttacking) {
             restoreStaminaCounter++;
 
-            if (restoreStaminaCounter > 10) {
+            if (restoreStaminaCounter > 5) {
                 currentStamina += 1;
                 restoreStaminaCounter = 0;
             }
@@ -365,7 +355,7 @@ public class Player extends Entity {
                 gamePanel.monsters[monsterIndex].isInvincible = true;
 
                 if (gamePanel.monsters[monsterIndex].currentLife <= 0) {
-                    gamePanel.monsters[monsterIndex] = null;
+                    gamePanel.monsters[monsterIndex].isDying = true;
                 }
             }
         }
@@ -436,26 +426,14 @@ public class Player extends Entity {
         graphics2D.setColor(Color.GREEN);
         graphics2D.drawRect(screenX, screenY, 128, 64);
 
-        // DRAWING ATTACK HITBOX
         graphics2D.setColor(Color.CYAN);
         graphics2D.drawRect(
-                screenX + this.currentAttackArea.x,
-                screenY + this.currentAttackArea.y,
+                screenX + currentAttackArea.x,
+                screenY + currentAttackArea.y,
                 currentAttackArea.width,
                 currentAttackArea.height
         );
-//        graphics2D.drawRect(
-//                screenX + this.rightAttackArea.x,
-//                screenY + this.rightAttackArea.y,
-//                rightAttackArea.width,
-//                rightAttackArea.height
-//        );
-//        graphics2D.drawRect(
-//                screenX + this.leftAttackArea.x,
-//                screenY + this.leftAttackArea.y,
-//                leftAttackArea.width,
-//                leftAttackArea.height
-//        );
+
         graphics2D.setComposite(originalComposite);
     }
 }

@@ -4,7 +4,6 @@ import entities.Entity;
 import main.GamePanel;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.util.Random;
 
 public class FlyingEye extends Entity {
@@ -28,6 +27,8 @@ public class FlyingEye extends Entity {
         solidAreaDefaultY = solidArea.y;
 
         maxSpriteNumbers = 8;
+        maxSpriteNumbersForTakingHit = 4;
+        maxSpriteNumbersForDeath = 4;
 
         maxLife = 50;
         maxStamina = 50;
@@ -51,21 +52,21 @@ public class FlyingEye extends Entity {
 
             actionLockCounter = 0;
         }
-
-        System.out.println(currentLife);
     }
 
     private void getFlyingEyeSprites() {
-        int k = 1;
+        byte DEATH_FRAMES = 4;
+        byte FLIGHT_FRAMES = 8;
+        byte ATTACK_FRAMES = 8;
+        byte TAKE_HIT_FRAMES = 4;
 
-        leftRunning = new BufferedImage[8];
-        rightRunning = new BufferedImage[8];
-
-        for (int i = 0; i < 8; i++) {
-            leftRunning[i] = getSpriteImage("/monsters/FlyingEye/flight/flight_left" + k + ".png");
-            rightRunning[i] = getSpriteImage("/monsters/FlyingEye/flight/flight_right" + k + ".png");
-
-            ++k;
-        }
+        leftDeath = loadSprites("/monsters/FlyingEye/death/death_left", DEATH_FRAMES);
+        rightDeath = loadSprites("/monsters/FlyingEye/death/death_right", DEATH_FRAMES);
+        leftRunning = loadSprites("/monsters/FlyingEye/flight/flight_left", FLIGHT_FRAMES);
+        rightRunning = loadSprites("/monsters/FlyingEye/flight/flight_right", FLIGHT_FRAMES);
+        leftTakeHit = loadSprites("/monsters/FlyingEye/takeHit/take_hit_left", TAKE_HIT_FRAMES);
+        rightTakeHit = loadSprites("/monsters/FlyingEye/takeHit/take_hit_right", TAKE_HIT_FRAMES);
+        leftAttack = loadSprites("/monsters/FlyingEye/attack/attack_left", ATTACK_FRAMES);
+        rightAttack = loadSprites("/monsters/FlyingEye/attack/attack_right", ATTACK_FRAMES);
     }
 }
