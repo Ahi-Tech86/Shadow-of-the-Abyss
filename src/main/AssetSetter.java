@@ -24,6 +24,10 @@ public class AssetSetter {
         gamePanel.monsters[0] = new FlyingEye(gamePanel);
         gamePanel.monsters[0].worldX = 10 * gamePanel.tileSize;
         gamePanel.monsters[0].worldY = 10 * gamePanel.tileSize;
+
+        gamePanel.monsters[1] = new Skeleton(gamePanel);
+        gamePanel.monsters[1].worldX = 12 * gamePanel.tileSize;
+        gamePanel.monsters[1].worldY = 10 * gamePanel.tileSize;
     }
 
     public void setAnimatedTiles() {
