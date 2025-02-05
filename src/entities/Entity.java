@@ -244,8 +244,8 @@ public class Entity {
             }
 
             graphics2D.drawImage(image, screenX, screenY, gamePanel.tileSize, gamePanel.tileSize, null);
-            graphics2D.setColor(Color.BLUE);
-            graphics2D.drawRect(screenX + this.solidArea.x, screenY + this.solidArea.y, this.solidArea.width, this.solidArea.height);
+            //graphics2D.setColor(Color.BLUE);
+            //graphics2D.drawRect(screenX + this.solidArea.x, screenY + this.solidArea.y, this.solidArea.width, this.solidArea.height);
         }
     }
 }

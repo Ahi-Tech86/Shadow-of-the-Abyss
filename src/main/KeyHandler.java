@@ -42,7 +42,7 @@ public class KeyHandler implements KeyListener {
             if (code == KeyEvent.VK_ENTER) {
                 if (gamePanel.userInterface.commandNum == 1) {
                     gamePanel.gameState = gamePanel.PLAY_STATE;
-                    //gamePanel.playMusic(0);
+                    gamePanel.playMusic(0);
                 } else if (gamePanel.userInterface.commandNum == 2) {
                     // later
                 } else if (gamePanel.userInterface.commandNum == 3) {

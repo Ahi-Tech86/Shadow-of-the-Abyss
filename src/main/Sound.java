@@ -10,7 +10,7 @@ public class Sound {
     URL[] soundUrl = new URL[30];
 
     public Sound() {
-        soundUrl[0] = getClass().getResource("/sound/BERSERK_DOS-88_DEMON_SLAYER.wav");
+        soundUrl[0] = getClass().getResource("/sound/BERSERK_DOS-88_DEMON_SLAYER(1).wav");
     }
 
     public void setFile(int i) {

@@ -376,7 +376,7 @@ public class Player extends Entity {
     public void draw(Graphics2D graphics2D) {
         BufferedImage image = getCurrentSprite();
         graphics2D.drawImage(image, screenX, screenY, 128, 64, null);
-        drawHitbox(graphics2D);
+        //drawHitbox(graphics2D);
     }
 
     private BufferedImage getCurrentSprite() {
